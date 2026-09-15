@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduScroll</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #09090B;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 430px;
+            padding: 20px;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: #111116;
+            border: 1px solid #24242C;
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .switch {
+            display: flex;
+            background: #09090B;
+            padding: 4px;
+            border-radius: 11px;
+            margin-bottom: 28px;
+        }
+
+        .switch button {
+            flex: 1;
+            border: 0;
+            padding: 12px;
+            border-radius: 8px;
+            background: transparent;
+            color: #A1A1AA;
+            cursor: pointer;
+        }
+
+        .switch button.active {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            color: white;
+        }
+
+        .form {
+            display: none;
+        }
+
+        .form.active {
+            display: block;
+        }
+
+        h1 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #A1A1AA;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            color: #D4D4D8;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #292931;
+            background: #09090B;
+            color: white;
+            outline: none;
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: #8B5CF6;
+        }
+
+        .password {
+            position: relative;
+        }
+
+        .password input {
+            padding-right: 55px;
+        }
+
+        .show {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: 0;
+            color: #A78BFA;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .forgot {
+            text-align: right;
+            margin-top: -7px;
+            margin-bottom: 18px;
+        }
+
+        .forgot button {
+            background: none;
+            border: 0;
+            color: #A78BFA;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .main-button {
+            width: 100%;
+            padding: 14px;
+            border: 0;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .main-button:disabled {
+            opacity: .6;
+        }
+
+        .message {
+            min-height: 20px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .error {
+            color: #F87171;
+        }
+
+        .success {
+            color: #4ADE80;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">EduScroll</div>
+
+    <div class="card">
+
+        <div class="switch">
+            <button id="loginTab" class="active" onclick="showForm('login')">
+                Log in
+            </button>
+
+            <button id="signupTab" onclick="showForm('signup')">
+                Sign up
+            </button>
+        </div>
+
+
+        <!-- LOGIN -->
+
+        <form id="loginForm" class="form active">
+
+            <h1>Welcome back</h1>
+            <p class="subtitle">Log in to continue learning.</p>
+
+            <div class="field">
+                <label>Email</label>
+                <input
+                    id="loginEmail"
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+
+                <div class="password">
+                    <input
+                        id="loginPassword"
+                        type="password"
+                        placeholder="Your password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show"
+                        onclick="togglePassword('loginPassword', this)"
+                    >
+                        Show
+                    </button>
+                </div>
+            </div>
+
+            <div class="forgot">
+                <button type="button" onclick="forgotPassword()">
+                    Forgot password?
+                </button>
+            </div>
+
+            <button class="main-button" type="submit">
+                Log in
+            </button>
+
+            <div id="loginMessage" class="message"></div>
+
+        </form>
+
+
+        <!-- SIGN UP -->
+
+        <form id="signupForm" class="form">
+
+            <h1>Create account</h1>
+            <p class="subtitle">Start your learning journey.</p>
+
+            <div class="field">
+                <label>Email</label>
+                <input
+                    id="signupEmail"
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+
+                <div class="password">
+                    <input
+                        id="signupPassword"
+                        type="password"
+                        placeholder="Create a password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show"
+                        onclick="togglePassword('signupPassword', this)"
+                    >
+                        Show
+                    </button>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Confirm password</label>
+
+                <div class="password">
+                    <input
+                        id="signupConfirm"
+                        type="password"
+                        placeholder="Repeat your password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show"
+                        onclick="togglePassword('signupConfirm', this)"
+                    >
+                        Show
+                    </button>
+                </div>
+            </div>
+
+            <button class="main-button" type="submit">
+                Create account
+            </button>
+
+            <div id="signupMessage" class="message"></div>
+
+        </form>
+
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL =
+    "https://hazdrvuxoqbqdxmdjhru.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_Sog2nQJ6lpK6rbq56IN5VA_bsocB0pj";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* LOGIN / SIGN UP */
+
+function showForm(type) {
+
+    document.getElementById("loginForm")
+        .classList.toggle("active", type === "login");
+
+    document.getElementById("signupForm")
+        .classList.toggle("active", type === "signup");
+
+    document.getElementById("loginTab")
+        .classList.toggle("active", type === "login");
+
+    document.getElementById("signupTab")
+        .classList.toggle("active", type === "signup");
+
+    document.getElementById("loginMessage").textContent = "";
+    document.getElementById("signupMessage").textContent = "";
+}
+
+
+/* LOGIN */
+
+document.getElementById("loginForm").addEventListener(
+    "submit",
+    async function(e) {
+
+        e.preventDefault();
+
+        const email =
+            document.getElementById("loginEmail").value.trim();
+
+        const password =
+            document.getElementById("loginPassword").value;
+
+        const message =
+            document.getElementById("loginMessage");
+
+        const button =
+            this.querySelector(".main-button");
+
+        button.disabled = true;
+        message.className = "message";
+        message.textContent = "Logging in...";
+
+        const { error } =
+            await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
+
+        button.disabled = false;
+
+        if (error) {
+
+            message.className = "message error";
+            message.textContent = error.message;
+
+            return;
+        }
+
+        message.className = "message success";
+        message.textContent = "Login successful.";
+
+        setTimeout(() => {
+            window.location.href = "language.html";
+        }, 500);
+    }
+);
+
+
+/* SIGN UP */
+
+document.getElementById("signupForm").addEventListener(
+    "submit",
+    async function(e) {
+
+        e.preventDefault();
+
+        const email =
+            document.getElementById("signupEmail").value.trim();
+
+        const password =
+            document.getElementById("signupPassword").value;
+
+        const confirm =
+            document.getElementById("signupConfirm").value;
+
+        const message =
+            document.getElementById("signupMessage");
+
+        const button =
+            this.querySelector(".main-button");
+
+        if (password !== confirm) {
+
+            message.className = "message error";
+            message.textContent = "Passwords do not match.";
+
+            return;
+        }
+
+        button.disabled = true;
+        message.className = "message";
+        message.textContent = "Creating your account...";
+
+        const { data, error } =
+            await supabaseClient.auth.signUp({
+                email,
+                password
+            });
+
+        button.disabled = false;
+
+        if (error) {
+
+            message.className = "message error";
+            message.textContent = error.message;
+
+            return;
+        }
+
+        if (data.session) {
+
+            message.className = "message success";
+            message.textContent = "Account created.";
+
+            setTimeout(() => {
+                window.location.href = "language.html";
+            }, 500);
+
+        } else {
+
+            message.className = "message success";
+            message.textContent =
+                "Account created. Check your email to confirm your account.";
+        }
+    }
+);
+
+
+/* SHOW PASSWORD */
+
+function togglePassword(id, button) {
+
+    const input = document.getElementById(id);
+
+    if (input.type === "password") {
+
+        input.type = "text";
+        button.textContent = "Hide";
+
+    } else {
+
+        input.type = "password";
+        button.textContent = "Show";
+    }
+}
+
+
+/* FORGOT PASSWORD */
+
+async function forgotPassword() {
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const message =
+        document.getElementById("loginMessage");
+
+    if (!email) {
+
+        message.className = "message error";
+        message.textContent = "Enter your email first.";
+
+        return;
+    }
+
+    message.className = "message";
+    message.textContent = "Sending reset email...";
+
+    const { error } =
+        await supabaseClient.auth.resetPasswordForEmail(
+            email,
+            {
+                redirectTo:
+                    window.location.origin +
+                    "/reset-password.html"
+            }
+        );
+
+    if (error) {
+
+        message.className = "message error";
+        message.textContent = error.message;
+
+        return;
+    }
+
+    message.className = "message success";
+    message.textContent =
+        "Password reset email sent. Check your inbox.";
+}
+
+</script>
+
+</body>
+</html>
