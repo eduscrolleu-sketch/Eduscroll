@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduScroll - Škola</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #09090B;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress {
+            height: 4px;
+            background: #27272A;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, #8B5CF6, #EC4899);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #A1A1AA;
+            font-size: 15px;
+            margin-bottom: 35px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .option {
+            min-height: 150px;
+            background: #111116;
+            border: 1px solid #27272A;
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: .2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .option:hover {
+            border-color: #8B5CF6;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            border-color: #8B5CF6;
+            background: rgba(139, 92, 246, .12);
+            box-shadow: 0 0 0 1px #8B5CF6;
+        }
+
+        .school-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            background: #18181D;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #A78BFA;
+            font-size: 19px;
+        }
+
+        .option h2 {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .option p {
+            color: #71717A;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .details {
+            display: none;
+            margin-top: 25px;
+            padding: 25px;
+            background: #111116;
+            border: 1px solid #27272A;
+            border-radius: 16px;
+        }
+
+        .details.active {
+            display: block;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: #D4D4D8;
+            margin-bottom: 8px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #292931;
+            border-radius: 10px;
+            background: #09090B;
+            color: white;
+            outline: none;
+            font-size: 14px;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #8B5CF6;
+        }
+
+        .continue {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: 0;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .continue:disabled {
+            opacity: .35;
+            cursor: not-allowed;
+        }
+
+        .message {
+            text-align: center;
+            min-height: 18px;
+            margin-top: 12px;
+            color: #F87171;
+            font-size: 13px;
+        }
+
+        .skip {
+            display: block;
+            margin: 18px auto 0;
+            border: 0;
+            background: transparent;
+            color: #71717A;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .skip:hover {
+            color: #A1A1AA;
+        }
+
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+
+            .option {
+                min-height: 110px;
+            }
+
+            .logo {
+                margin-bottom: 35px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">EduScroll</div>
+
+    <div class="progress">
+        <div class="progress-bar"></div>
+    </div>
+
+    <h1>Do akej školy chodíš?</h1>
+
+    <p class="subtitle">
+        Pomôže nám to prispôsobiť obsah práve tebe.
+    </p>
+
+
+    <div class="options">
+
+        <div
+            class="option"
+            data-school="zs"
+            onclick="selectSchool(this)"
+        >
+            <div class="school-icon">ZŠ</div>
+
+            <div>
+                <h2>Základná škola</h2>
+                <p>1. – 9. ročník</p>
+            </div>
+        </div>
+
+
+        <div
+            class="option"
+            data-school="ss"
+            onclick="selectSchool(this)"
+        >
+            <div class="school-icon">SŠ</div>
+
+            <div>
+                <h2>Stredná škola</h2>
+                <p>Vyberieme aj odbor</p>
+            </div>
+        </div>
+
+
+        <div
+            class="option"
+            data-school="vs"
+            onclick="selectSchool(this)"
+        >
+            <div class="school-icon">VŠ</div>
+
+            <div>
+                <h2>Vysoká škola</h2>
+                <p>Vyberieme aj odbor</p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ZŠ -->
+
+    <div id="zsDetails" class="details">
+
+        <div class="field">
+
+            <label for="zsGrade">
+                Do ktorého ročníka chodíš?
+            </label>
+
+            <select id="zsGrade">
+
+                <option value="">
+                    Vyber ročník
+                </option>
+
+                <option value="1">1. ročník</option>
+                <option value="2">2. ročník</option>
+                <option value="3">3. ročník</option>
+                <option value="4">4. ročník</option>
+                <option value="5">5. ročník</option>
+                <option value="6">6. ročník</option>
+                <option value="7">7. ročník</option>
+                <option value="8">8. ročník</option>
+                <option value="9">9. ročník</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- SŠ -->
+
+    <div id="ssDetails" class="details">
+
+        <div class="field">
+
+            <label for="ssType">
+                Typ strednej školy
+            </label>
+
+            <select id="ssType">
+
+                <option value="">
+                    Vyber typ školy
+                </option>
+
+                <option value="gymnazium">
+                    Gymnázium
+                </option>
+
+                <option value="sos">
+                    Stredná odborná škola
+                </option>
+
+                <option value="souk">
+                    Stredné odborné učilište
+                </option>
+
+                <option value="konzervatorium">
+                    Konzervatórium
+                </option>
+
+                <option value="other">
+                    Iné
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="field">
+
+            <label for="ssField">
+                Odbor
+            </label>
+
+            <input
+                id="ssField"
+                type="text"
+                placeholder="Napr. informatika"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label for="ssGrade">
+                Ročník
+            </label>
+
+            <select id="ssGrade">
+
+                <option value="">
+                    Vyber ročník
+                </option>
+
+                <option value="1">1. ročník</option>
+                <option value="2">2. ročník</option>
+                <option value="3">3. ročník</option>
+                <option value="4">4. ročník</option>
+                <option value="5">5. ročník</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- VŠ -->
+
+    <div id="vsDetails" class="details">
+
+        <div class="field">
+
+            <label for="vsField">
+                Odbor
+            </label>
+
+            <input
+                id="vsField"
+                type="text"
+                placeholder="Napr. informatika"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label for="vsGrade">
+                Ročník
+            </label>
+
+            <select id="vsGrade">
+
+                <option value="">
+                    Vyber ročník
+                </option>
+
+                <option value="1">1. ročník</option>
+                <option value="2">2. ročník</option>
+                <option value="3">3. ročník</option>
+                <option value="4">4. ročník</option>
+                <option value="5">5. ročník</option>
+                <option value="6">6. ročník</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <button
+        id="continueButton"
+        class="continue"
+        onclick="continueSchool()"
+        disabled
+    >
+        Pokračovať
+    </button>
+
+    <button
+        class="skip"
+        onclick="skipSchool()"
+    >
+        Preskočiť
+    </button>
+
+    <div id="message" class="message"></div>
+
+</div>
+
+
+<script>
+
+let selectedSchool = null;
+
+
+function selectSchool(element) {
+
+    document.querySelectorAll(".option")
+        .forEach(option => {
+            option.classList.remove("selected");
+        });
+
+    element.classList.add("selected");
+
+    selectedSchool =
+        element.dataset.school;
+
+
+    document.querySelectorAll(".details")
+        .forEach(details => {
+            details.classList.remove("active");
+        });
+
+
+    if (selectedSchool === "zs") {
+
+        document
+            .getElementById("zsDetails")
+            .classList.add("active");
+
+    }
+
+    if (selectedSchool === "ss") {
+
+        document
+            .getElementById("ssDetails")
+            .classList.add("active");
+
+    }
+
+    if (selectedSchool === "vs") {
+
+        document
+            .getElementById("vsDetails")
+            .classList.add("active");
+
+    }
+
+
+    document.getElementById("continueButton")
+        .disabled = false;
+}
+
+
+function continueSchool() {
+
+    const message =
+        document.getElementById("message");
+
+    let schoolData = {
+        type: selectedSchool
+    };
+
+
+    if (selectedSchool === "zs") {
+
+        const grade =
+            document.getElementById("zsGrade").value;
+
+        if (!grade) {
+
+            message.textContent =
+                "Vyber svoj ročník.";
+
+            return;
+        }
+
+        schoolData.grade = grade;
+    }
+
+
+    if (selectedSchool === "ss") {
+
+        const type =
+            document.getElementById("ssType").value;
+
+        const field =
+            document.getElementById("ssField").value.trim();
+
+        const grade =
+            document.getElementById("ssGrade").value;
+
+
+        if (!type || !field || !grade) {
+
+            message.textContent =
+                "Vyplň všetky údaje.";
+
+            return;
+        }
+
+
+        schoolData.schoolType = type;
+        schoolData.field = field;
+        schoolData.grade = grade;
+    }
+
+
+    if (selectedSchool === "vs") {
+
+        const field =
+            document.getElementById("vsField").value.trim();
+
+        const grade =
+            document.getElementById("vsGrade").value;
+
+
+        if (!field || !grade) {
+
+            message.textContent =
+                "Vyplň všetky údaje.";
+
+            return;
+        }
+
+
+        schoolData.field = field;
+        schoolData.grade = grade;
+    }
+
+
+    localStorage.setItem(
+        "eduscroll_school",
+        JSON.stringify(schoolData)
+    );
+
+
+    /*
+       Ďalší krok:
+       príprava na prijímačky
+    */
+
+    window.location.href =
+        "entrance.html";
+}
+
+
+function skipSchool() {
+
+    localStorage.setItem(
+        "eduscroll_school",
+        JSON.stringify({
+            type: "none"
+        })
+    );
+
+    window.location.href =
+        "entrance.html";
+}
+
+</script>
+
+</body>
+</html>
