@@ -3,42 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>EduScroll</title>
-
-    <meta http-equiv="refresh" content="3;url=login.html">
 
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #05070A;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: #030508;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        h1 {
-            font-size: 52px;
+        .splash {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: #0066ff;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.18;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .logo {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            animation: logoIn 1s cubic-bezier(.17,.67,.35,1.3);
+        }
+
+        .logo-icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 22px;
+
+            background: linear-gradient(
+                135deg,
+                #0066ff,
+                #00aaff
+            );
+
+            box-shadow:
+                0 0 25px rgba(0, 119, 255, 0.5),
+                0 0 70px rgba(0, 119, 255, 0.18);
+
+            font-size: 36px;
+            font-weight: 900;
+
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .logo h1 {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -2px;
+
+            background: linear-gradient(
+                90deg,
+                #ffffff,
+                #4da3ff
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo p {
+            margin-top: 8px;
+            color: #6f7b91;
+            font-size: 13px;
             letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        .blue {
-            color: #1677FF;
+        .loader {
+            position: absolute;
+            bottom: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            width: 120px;
+            height: 3px;
+
+            background: #111827;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .loader::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+
+            width: 0%;
+            height: 100%;
+
+            background: linear-gradient(
+                90deg,
+                #0066ff,
+                #00aaff
+            );
+
+            animation: loading 3s linear forwards;
+        }
+
+        @keyframes logoIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.7) translateY(20px);
+            }
+
+            70% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(0.9);
+                opacity: 0.15;
+            }
+
+            50% {
+                transform: scale(1.15);
+                opacity: 0.23;
+            }
+        }
+
+        @keyframes loading {
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <h1>Edu<span class="blue">Scroll</span></h1>
+    <main class="splash">
+
+        <div class="glow"></div>
+
+        <div class="logo">
+            <div class="logo-icon">
+                E
+            </div>
+
+            <h1>EduScroll</h1>
+
+            <p>Learn. Scroll. Grow.</p>
+        </div>
+
+        <div class="loader"></div>
+
+    </main>
+
+    <script>
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 3000);
+    </script>
 
 </body>
 </html>
