@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EduScroll</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #09090B;
+            color: white;
+            font-family: Arial, sans-serif;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .logo {
+            text-align: center;
+
+            font-size: 30px;
+            font-weight: 700;
+
+            margin-bottom: 55px;
+
+            background: linear-gradient(
+                135deg,
+                #8B5CF6,
+                #EC4899
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #A1A1AA;
+            font-size: 15px;
+            margin-bottom: 35px;
+        }
+
+        .categories {
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 16px;
+        }
+
+        .category {
+            min-height: 180px;
+
+            border: 1px solid #27272A;
+
+            background: #111116;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            cursor: pointer;
+
+            transition:
+                transform .2s,
+                border-color .2s,
+                background .2s;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+        }
+
+        .category:hover {
+            transform: translateY(-3px);
+
+            border-color: #8B5CF6;
+        }
+
+        .category.selected {
+
+            border-color: #8B5CF6;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(139, 92, 246, .18),
+                    rgba(236, 72, 153, .08)
+                );
+
+            box-shadow:
+                0 0 0 1px #8B5CF6;
+        }
+
+        .icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            color: #A78BFA;
+
+            background: #18181D;
+
+            border-radius: 12px;
+        }
+
+        .icon svg {
+            width: 23px;
+            height: 23px;
+        }
+
+        .category h2 {
+            font-size: 19px;
+            margin-top: 25px;
+        }
+
+        .category p {
+            color: #71717A;
+            font-size: 13px;
+            margin-top: 7px;
+            line-height: 1.4;
+        }
+
+        .check {
+            width: 22px;
+            height: 22px;
+
+            border: 1px solid #3F3F46;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            align-self: flex-end;
+
+            color: white;
+
+            font-size: 13px;
+        }
+
+        .category.selected .check {
+
+            background: linear-gradient(
+                135deg,
+                #8B5CF6,
+                #EC4899
+            );
+
+            border-color: transparent;
+        }
+
+        .continue {
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background: linear-gradient(
+                135deg,
+                #8B5CF6,
+                #EC4899
+            );
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: opacity .2s;
+        }
+
+        .continue:hover {
+            opacity: .9;
+        }
+
+        .continue:disabled {
+            opacity: .35;
+            cursor: not-allowed;
+        }
+
+        .message {
+            text-align: center;
+
+            color: #F87171;
+
+            font-size: 13px;
+
+            margin-top: 12px;
+
+            min-height: 18px;
+        }
+
+        @media (max-width: 600px) {
+
+            .categories {
+                grid-template-columns: 1fr;
+            }
+
+            .category {
+                min-height: 145px;
+            }
+
+            .logo {
+                margin-bottom: 35px;
+            }
+
+            .title {
+                font-size: 26px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        EduScroll
+    </div>
+
+    <h1 class="title">
+        Čo sa chceš naučiť?
+    </h1>
+
+    <p class="subtitle">
+        Vyber všetky oblasti, ktoré ťa zaujímajú.
+    </p>
+
+
+    <div class="categories">
+
+
+        <!-- ŠKOLA -->
+
+        <div
+            class="category"
+            data-category="school"
+            onclick="selectCategory(this)"
+        >
+
+            <div>
+
+                <div class="icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    >
+
+                        <path d="M3 10L12 4L21 10" />
+
+                        <path d="M5 10V20H19V10" />
+
+                        <path d="M9 20V14H15V20" />
+
+                    </svg>
+
+                </div>
+
+                <h2>Škola</h2>
+
+                <p>
+                    Predmety, ročník, odbor a príprava na prijímačky.
+                </p>
+
+            </div>
+
+            <div class="check"></div>
+
+        </div>
+
+
+        <!-- HOBBY -->
+
+        <div
+            class="category"
+            data-category="hobby"
+            onclick="selectCategory(this)"
+        >
+
+            <div>
+
+                <div class="icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    >
+
+                        <path d="M4 19L19 4" />
+
+                        <path d="M7 21L21 7" />
+
+                        <path d="M3 14L10 21" />
+
+                        <path d="M14 3L21 10" />
+
+                    </svg>
+
+                </div>
+
+                <h2>Hobby</h2>
+
+                <p>
+                    Objavuj nové záujmy a rozvíjaj svoje schopnosti.
+                </p>
+
+            </div>
+
+            <div class="check"></div>
+
+        </div>
+
+
+        <!-- ŠPORT -->
+
+        <div
+            class="category"
+            data-category="sport"
+            onclick="selectCategory(this)"
+        >
+
+            <div>
+
+                <div class="icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    >
+
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="9"
+                        />
+
+                        <path d="M7 5L12 9L17 5" />
+
+                        <path d="M12 9V15" />
+
+                        <path d="M8 19L12 15L16 19" />
+
+                    </svg>
+
+                </div>
+
+                <h2>Šport</h2>
+
+                <p>
+                    Tréning, technika, taktika a zlepšovanie výkonu.
+                </p>
+
+            </div>
+
+            <div class="check"></div>
+
+        </div>
+
+
+        <!-- OSOBNÝ ROZVOJ -->
+
+        <div
+            class="category"
+            data-category="personal"
+            onclick="selectCategory(this)"
+        >
+
+            <div>
+
+                <div class="icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    >
+
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="3"
+                        />
+
+                        <path
+                            d="M5 21C5 16.8 8 14 12 14C16 14 19 16.8 19 21"
+                        />
+
+                    </svg>
+
+                </div>
+
+                <h2>Osobný rozvoj</h2>
+
+                <p>
+                    Produktivita, komunikácia, návyky a ďalšie zručnosti.
+                </p>
+
+            </div>
+
+            <div class="check"></div>
+
+        </div>
+
+    </div>
+
+
+    <button
+        id="continueButton"
+        class="continue"
+        onclick="continueOnboarding()"
+        disabled
+    >
+        Pokračovať
+    </button>
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL =
+    "https://hazdrvuxoqbqdxmdjhru.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_Sog2nQJ6lpK6rbq56IN5VA_bsocB0pj";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+let selectedCategories = [];
+
+
+function selectCategory(element) {
+
+    const category =
+        element.dataset.category;
+
+    element.classList.toggle("selected");
+
+
+    if (
+        selectedCategories.includes(category)
+    ) {
+
+        selectedCategories =
+            selectedCategories.filter(
+                item => item !== category
+            );
+
+        element.querySelector(".check")
+            .textContent = "";
+
+    } else {
+
+        selectedCategories.push(category);
+
+        element.querySelector(".check")
+            .textContent = "✓";
+    }
+
+
+    document.getElementById("continueButton")
+        .disabled =
+        selectedCategories.length === 0;
+}
+
+
+async function continueOnboarding() {
+
+    const message =
+        document.getElementById("message");
+
+    const button =
+        document.getElementById("continueButton");
+
+
+    if (selectedCategories.length === 0) {
+
+        message.textContent =
+            "Vyber aspoň jednu oblasť.";
+
+        return;
+    }
+
+
+    button.disabled = true;
+
+    message.style.color = "#A1A1AA";
+
+    message.textContent =
+        "Ukladáme tvoje nastavenia...";
+
+
+    const {
+        data: {
+            user
+        }
+    } = await supabaseClient.auth.getUser();
+
+
+    if (!user) {
+
+        message.style.color = "#F87171";
+
+        message.textContent =
+            "Relácia vypršala. Prihlás sa znova.";
+
+        button.disabled = false;
+
+        return;
+    }
+
+
+    /*
+       Zatiaľ uložíme výber lokálne.
+       Neskôr ho uložíme aj do Supabase
+       profilu používateľa.
+    */
+
+    localStorage.setItem(
+        "eduscroll_categories",
+        JSON.stringify(
+            selectedCategories
+        )
+    );
+
+
+    /*
+       Ďalší krok onboardingu.
+    */
+
+    window.location.href =
+        "school.html";
+}
+
+</script>
+
+</body>
+</html>
