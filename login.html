@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EduScroll — Login</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #0066ff;
+            --light-blue: #00aaff;
+            --bg: #030508;
+            --border: rgba(255,255,255,0.08);
+            --text: #ffffff;
+            --muted: #727d91;
+            --danger: #ff5570;
+            --success: #45e0a0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            overflow: hidden;
+        }
+
+        /* BACKGROUND */
+
+        .background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: #0066ff;
+            filter: blur(170px);
+            opacity: .12;
+        }
+
+        .glow.one {
+            top: -200px;
+            left: -150px;
+        }
+
+        .glow.two {
+            right: -200px;
+            bottom: -200px;
+            background: #00aaff;
+            opacity: .08;
+        }
+
+        /* MAIN */
+
+        .container {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 430px;
+
+            padding: 42px;
+
+            background: rgba(8,12,19,.88);
+
+            border: 1px solid var(--border);
+            border-radius: 28px;
+
+            box-shadow:
+                0 30px 80px rgba(0,0,0,.5),
+                0 0 60px rgba(0,102,255,.06);
+
+            backdrop-filter: blur(20px);
+
+            animation: cardIn .7s ease;
+        }
+
+        /* BRAND */
+
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .brand-icon {
+            width: 52px;
+            height: 52px;
+
+            margin: 0 auto 13px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            background: linear-gradient(
+                135deg,
+                var(--blue),
+                var(--light-blue)
+            );
+
+            font-size: 25px;
+            font-weight: 900;
+
+            box-shadow:
+                0 0 25px rgba(0,102,255,.35);
+        }
+
+        .brand h1 {
+            font-size: 25px;
+            letter-spacing: -1px;
+        }
+
+        .brand p {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* SWITCH */
+
+        .switch {
+            position: relative;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            padding: 4px;
+            margin-bottom: 28px;
+
+            background: #0d131d;
+
+            border-radius: 13px;
+        }
+
+        .switch-slider {
+            position: absolute;
+
+            top: 4px;
+            left: 4px;
+
+            width: calc(50% - 4px);
+            height: calc(100% - 8px);
+
+            border-radius: 10px;
+
+            background: linear-gradient(
+                135deg,
+                #005cff,
+                #008cff
+            );
+
+            box-shadow:
+                0 5px 18px rgba(0,102,255,.25);
+
+            transition:
+                transform .35s cubic-bezier(.4,0,.2,1);
+        }
+
+        .switch.signup .switch-slider {
+            transform: translateX(100%);
+        }
+
+        .switch button {
+            position: relative;
+            z-index: 2;
+
+            border: none;
+            background: transparent;
+
+            color: #7d8798;
+
+            padding: 11px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: color .25s;
+        }
+
+        .switch button.active {
+            color: white;
+        }
+
+        /* FORMS */
+
+        .forms {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form {
+            transition:
+                transform .4s ease,
+                opacity .35s ease;
+        }
+
+        .signup-form {
+            position: absolute;
+
+            width: 100%;
+
+            top: 0;
+            left: 100%;
+
+            opacity: 0;
+
+            transform: translateX(20px);
+
+            pointer-events: none;
+        }
+
+        .login-form.hidden {
+            opacity: 0;
+            transform: translateX(-20px);
+            pointer-events: none;
+        }
+
+        .signup-form.show {
+            left: 0;
+
+            opacity: 1;
+
+            transform: translateX(0);
+
+            pointer-events: auto;
+        }
+
+        /* INPUT */
+
+        .input-group {
+            margin-bottom: 17px;
+        }
+
+        .input-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #aeb7c7;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .input {
+            width: 100%;
+
+            padding: 14px 15px;
+
+            background: #0b1018;
+
+            border: 1px solid #18202c;
+
+            border-radius: 12px;
+
+            color: white;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: .25s;
+        }
+
+        .input::placeholder {
+            color: #4e596b;
+        }
+
+        .input:focus {
+            background: #0d131d;
+
+            border-color: #0066ff;
+
+            box-shadow:
+                0 0 0 3px rgba(0,102,255,.1),
+                0 0 20px rgba(0,102,255,.08);
+        }
+
+        /* FORGOT */
+
+        .forgot {
+            text-align: right;
+
+            margin-top: -5px;
+            margin-bottom: 20px;
+        }
+
+        .forgot a {
+            color: #5b9cff;
+
+            font-size: 12px;
+
+            text-decoration: none;
+        }
+
+        /* MAIN BUTTON */
+
+        .main-button {
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: linear-gradient(
+                135deg,
+                #005cff,
+                #008cff
+            );
+
+            color: white;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 25px rgba(0,102,255,.22);
+
+            transition: .2s;
+        }
+
+        .main-button:hover {
+            transform: translateY(-2px);
+
+            filter: brightness(1.1);
+
+            box-shadow:
+                0 12px 35px rgba(0,102,255,.35);
+        }
+
+        .main-button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* DIVIDER */
+
+        .divider {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin: 23px 0;
+
+            color: #4f596a;
+
+            font-size: 11px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+
+            height: 1px;
+
+            flex: 1;
+
+            background: #18202c;
+        }
+
+        /* GOOGLE */
+
+        .google-button {
+            width: 100%;
+
+            padding: 12px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            background: #0b1018;
+
+            border: 1px solid #18202c;
+
+            border-radius: 12px;
+
+            color: #dce3ed;
+
+            cursor: pointer;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            transition: .25s;
+        }
+
+        .google-button:hover {
+            border-color: #2a3c58;
+
+            background: #0e141e;
+
+            transform: translateY(-1px);
+        }
+
+        .google-icon {
+            width: 18px;
+            height: 18px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            color: white;
+        }
+
+        /* BOTTOM */
+
+        .bottom {
+            margin-top: 25px;
+
+            text-align: center;
+
+            color: #667184;
+
+            font-size: 12px;
+        }
+
+        .bottom span {
+            color: #5b9cff;
+
+            cursor: pointer;
+
+            font-weight: 600;
+        }
+
+        /* MESSAGE */
+
+        .message {
+            position: fixed;
+
+            left: 50%;
+            bottom: 25px;
+
+            transform: translate(-50%,20px);
+
+            padding: 13px 20px;
+
+            background: #0c1420;
+
+            border: 1px solid #1c3555;
+
+            border-radius: 12px;
+
+            color: #8bbcff;
+
+            font-size: 13px;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition: .3s;
+
+            z-index: 20;
+
+            max-width: 90%;
+
+            text-align: center;
+        }
+
+        .message.show {
+            opacity: 1;
+
+            transform: translate(-50%,0);
+        }
+
+        .message.error {
+            color: #ff8b9c;
+            border-color: rgba(255,85,112,.3);
+        }
+
+        .message.success {
+            color: #65e8ae;
+            border-color: rgba(69,224,160,.25);
+        }
+
+        /* ANIMATION */
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(20px)
+                    scale(.97);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+        @media (max-width:480px) {
+
+            .auth-card {
+                padding: 28px 22px;
+
+                border-radius: 23px;
+            }
+
+            .brand {
+                margin-bottom: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background">
+
+        <div class="glow one"></div>
+
+        <div class="glow two"></div>
+
+    </div>
+
+
+    <main class="container">
+
+        <section class="auth-card">
+
+            <!-- BRAND -->
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    E
+                </div>
+
+                <h1>
+                    EduScroll
+                </h1>
+
+                <p>
+                    Learn. Scroll. Grow.
+                </p>
+
+            </div>
+
+
+            <!-- LOGIN / SIGN UP -->
+
+            <div
+                class="switch"
+                id="switch"
+            >
+
+                <div class="switch-slider"></div>
+
+                <button
+                    id="loginTab"
+                    class="active"
+                    onclick="showLogin()"
+                >
+                    Login
+                </button>
+
+                <button
+                    id="signupTab"
+                    onclick="showSignup()"
+                >
+                    Sign Up
+                </button>
+
+            </div>
+
+
+            <div class="forms">
+
+
+                <!-- LOGIN -->
+
+                <form
+                    class="form login-form"
+                    id="loginForm"
+                >
+
+                    <div class="input-group">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            id="loginEmail"
+                            class="input"
+                            type="email"
+                            placeholder="you@example.com"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Password
+                        </label>
+
+                        <input
+                            id="loginPassword"
+                            class="input"
+                            type="password"
+                            placeholder="••••••••"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="forgot">
+
+                        <a href="#">
+                            Forgot your password?
+                        </a>
+
+                    </div>
+
+
+                    <button
+                        id="loginButton"
+                        class="main-button"
+                        type="submit"
+                    >
+                        Log In →
+                    </button>
+
+
+                    <div class="divider">
+                        or
+                    </div>
+
+
+                    <button
+                        class="google-button"
+                        type="button"
+                        onclick="googleLogin()"
+                    >
+
+                        <span class="google-icon">
+                            G
+                        </span>
+
+                        Continue with Google
+
+                    </button>
+
+
+                    <div class="bottom">
+
+                        Don't have an account?
+
+                        <span onclick="showSignup()">
+                            Sign up
+                        </span>
+
+                    </div>
+
+                </form>
+
+
+                <!-- SIGN UP -->
+
+                <form
+                    class="form signup-form"
+                    id="signupForm"
+                >
+
+                    <div class="input-group">
+
+                        <label>
+                            Name
+                        </label>
+
+                        <input
+                            id="signupName"
+                            class="input"
+                            type="text"
+                            placeholder="What's your name?"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            id="signupEmail"
+                            class="input"
+                            type="email"
+                            placeholder="you@example.com"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Password
+                        </label>
+
+                        <input
+                            id="signupPassword"
+                            class="input"
+                            type="password"
+                            placeholder="Create a password"
+                            minlength="6"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Confirm Password
+                        </label>
+
+                        <input
+                            id="signupConfirm"
+                            class="input"
+                            type="password"
+                            placeholder="Repeat your password"
+                            minlength="6"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        id="signupButton"
+                        class="main-button"
+                        type="submit"
+                    >
+                        Create Account →
+                    </button>
+
+
+                    <div class="divider">
+                        or
+                    </div>
+
+
+                    <button
+                        class="google-button"
+                        type="button"
+                        onclick="googleSignup()"
+                    >
+
+                        <span class="google-icon">
+                            G
+                        </span>
+
+                        Sign up with Google
+
+                    </button>
+
+
+                    <div class="bottom">
+
+                        Already have an account?
+
+                        <span onclick="showLogin()">
+                            Log in
+                        </span>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+
+    <script>
+
+        /*
+        ============================================
+        SUPABASE CONFIG
+        ============================================
+
+        Replace these two values with your own
+        Supabase Project URL and Publishable Key.
+        */
+
+        const SUPABASE_URL =
+            "YOUR_SUPABASE_PROJECT_URL";
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "YOUR_SUPABASE_PUBLISHABLE_KEY";
+
+
+        /*
+        ============================================
+        CREATE SUPABASE CLIENT
+        ============================================
+        */
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+
+        /*
+        ============================================
+        ELEMENTS
+        ============================================
+        */
+
+        const switchElement =
+            document.getElementById("switch");
+
+        const loginTab =
+            document.getElementById("loginTab");
+
+        const signupTab =
+            document.getElementById("signupTab");
+
+        const loginForm =
+            document.getElementById("loginForm");
+
+        const signupForm =
+            document.getElementById("signupForm");
+
+        const message =
+            document.getElementById("message");
+
+
+        /*
+        ============================================
+        SWITCH TO LOGIN
+        ============================================
+        */
+
+        function showLogin() {
+
+            switchElement.classList.remove("signup");
+
+            loginTab.classList.add("active");
+
+            signupTab.classList.remove("active");
+
+            loginForm.classList.remove("hidden");
+
+            signupForm.classList.remove("show");
+
+        }
+
+
+        /*
+        ============================================
+        SWITCH TO SIGN UP
+        ============================================
+        */
+
+        function showSignup() {
+
+            switchElement.classList.add("signup");
+
+            loginTab.classList.remove("active");
+
+            signupTab.classList.add("active");
+
+            loginForm.classList.add("hidden");
+
+            signupForm.classList.add("show");
+
+        }
+
+
+        /*
+        ============================================
+        EMAIL LOGIN
+        ============================================
+        */
+
+        loginForm.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+                const email =
+                    document.getElementById(
+                        "loginEmail"
+                    ).value.trim();
+
+                const password =
+                    document.getElementById(
+                        "loginPassword"
+                    ).value;
+
+                const button =
+                    document.getElementById(
+                        "loginButton"
+                    );
+
+                button.disabled = true;
+
+                button.textContent =
+                    "Logging in...";
+
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.auth
+                        .signInWithPassword({
+                            email: email,
+                            password: password
+                        });
+
+
+                if (error) {
+
+                    showMessage(
+                        error.message,
+                        "error"
+                    );
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        "Log In →";
+
+                    return;
+                }
+
+
+                showMessage(
+                    "Welcome back! 🚀",
+                    "success"
+                );
+
+
+                /*
+                Give the message a moment,
+                then go to the home page.
+                */
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        "home.html";
+
+                }, 700);
+
+            }
+        );
+
+
+        /*
+        ============================================
+        EMAIL SIGN UP
+        ============================================
+        */
+
+        signupForm.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+                const name =
+                    document.getElementById(
+                        "signupName"
+                    ).value.trim();
+
+                const email =
+                    document.getElementById(
+                        "signupEmail"
+                    ).value.trim();
+
+                const password =
+                    document.getElementById(
+                        "signupPassword"
+                    ).value;
+
+                const confirmPassword =
+                    document.getElementById(
+                        "signupConfirm"
+                    ).value;
+
+                const button =
+                    document.getElementById(
+                        "signupButton"
+                    );
+
+
+                if (password !== confirmPassword) {
+
+                    showMessage(
+                        "Passwords do not match.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                button.disabled = true;
+
+                button.textContent =
+                    "Creating account...";
+
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.auth
+                        .signUp({
+
+                            email: email,
+
+                            password: password,
+
+                            options: {
+
+                                data: {
+                                    name: name
+                                }
+
+                            }
+
+                        });
+
+
+                if (error) {
+
+                    showMessage(
+                        error.message,
+                        "error"
+                    );
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        "Create Account →";
+
+                    return;
+                }
+
+
+                /*
+                Depending on your Supabase
+                email confirmation settings,
+                a session may or may not exist here.
+                */
+
+                if (data.session) {
+
+                    showMessage(
+                        "Account created! 🚀",
+                        "success"
+                    );
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            "home.html";
+
+                    }, 700);
+
+                } else {
+
+                    showMessage(
+                        "Account created! Check your email to confirm your account.",
+                        "success"
+                    );
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        "Create Account →";
+
+                }
+
+            }
+        );
+
+
+        /*
+        ============================================
+        GOOGLE LOGIN
+        ============================================
+        */
+
+        async function googleLogin() {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient.auth
+                    .signInWithOAuth({
+
+                        provider: "google",
+
+                        options: {
+
+                            redirectTo:
+                                window.location.origin +
+                                "/home.html"
+
+                        }
+
+                    });
+
+
+            if (error) {
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /*
+        ============================================
+        GOOGLE SIGN UP
+        ============================================
+        */
+
+        async function googleSignup() {
+
+            /*
+            Google OAuth handles both
+            sign-in and first-time sign-up.
+            */
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient.auth
+                    .signInWithOAuth({
+
+                        provider: "google",
+
+                        options: {
+
+                            redirectTo:
+                                window.location.origin +
+                                "/home.html"
+
+                        }
+
+                    });
+
+
+            if (error) {
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /*
+        ============================================
+        SHOW MESSAGE
+        ============================================
+        */
+
+        function showMessage(
+            text,
+            type = ""
+        ) {
+
+            message.textContent = text;
+
+            message.className =
+                "message show " + type;
+
+
+            setTimeout(() => {
+
+                message.classList.remove(
+                    "show"
+                );
+
+            }, 4000);
+
+        }
+
+
+        /*
+        ============================================
+        CHECK EXISTING SESSION
+        ============================================
+        */
+
+        async function checkSession() {
+
+            const {
+                data
+            } =
+                await supabaseClient.auth
+                    .getSession();
+
+
+            if (data.session) {
+
+                window.location.href =
+                    "home.html";
+
+            }
+
+        }
+
+
+        checkSession();
+
+
+        /*
+        ============================================
+        AUTH STATE
+        ============================================
+        */
+
+        supabaseClient.auth
+            .onAuthStateChange(
+                (event, session) => {
+
+                    if (
+                        event === "SIGNED_IN" &&
+                        session
+                    ) {
+
+                        /*
+                        OAuth redirects are handled
+                        by Supabase automatically.
+                        */
+
+                    }
+
+                }
+            );
+
+    </script>
+
+</body>
+</html>
