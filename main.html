@@ -1,53 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>EduScroll</title>
 
+    <!-- SUPABASE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
+
         body {
+
             min-height: 100vh;
+
             background:
                 radial-gradient(
                     circle at 50% 0%,
-                    rgba(0, 90, 255, .13),
-                    transparent 35%
+                    rgba(20, 120, 255, 0.15),
+                    transparent 45%
                 ),
                 #05070b;
 
             color: white;
-            font-family: Inter, Arial, sans-serif;
+
+            font-family:
+                Inter,
+                Arial,
+                sans-serif;
 
             display: flex;
-            justify-content: center;
+
             align-items: center;
 
-            overflow: hidden;
+            justify-content: center;
+
+            padding: 20px;
+
         }
+
 
         .container {
+
             width: 100%;
-            max-width: 560px;
-            padding: 25px;
+
+            max-width: 520px;
+
         }
 
+
+        .logo {
+
+            text-align: center;
+
+            font-size: 27px;
+
+            font-weight: 800;
+
+            letter-spacing: -1px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .logo span {
+
+            color: #1478ff;
+
+        }
+
+
         .card {
+
             width: 100%;
-            min-height: 620px;
-
-            padding: 45px 38px;
-
-            border-radius: 24px;
 
             background:
                 linear-gradient(
@@ -56,203 +97,2577 @@
                     rgba(255,255,255,.015)
                 );
 
-            border: 1px solid rgba(255,255,255,.07);
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            border-radius: 24px;
+
+            padding: 32px;
 
             box-shadow:
-                0 30px 100px rgba(0,0,0,.45),
-                0 0 60px rgba(0,80,255,.04);
+                0 30px 100px rgba(0,0,0,.5),
+                0 0 60px rgba(20,120,255,.04);
 
-            position: relative;
-
-            overflow: hidden;
         }
 
-        .progress {
-            position: absolute;
-            top: 0;
-            left: 0;
 
-            height: 3px;
-            width: 0%;
+        .step-number {
 
-            background: #1478ff;
-
-            box-shadow:
-                0 0 15px #1478ff;
-
-            transition: width .4s ease;
-        }
-
-        .logo {
-            text-align: center;
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-
-            margin-bottom: 45px;
-        }
-
-        .logo span {
             color: #1478ff;
-        }
-
-        .step {
-            display: none;
-
-            animation: appear .35s ease;
-        }
-
-        .step.active {
-            display: block;
-        }
-
-        @keyframes appear {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .step-label {
-            text-align: center;
-
-            color: #637083;
 
             font-size: 10px;
+
+            font-weight: 700;
+
             text-transform: uppercase;
 
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
 
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+
         }
 
+
         h1 {
-            text-align: center;
 
             font-size: 28px;
-            line-height: 1.15;
+
+            line-height: 1.1;
 
             letter-spacing: -1px;
 
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+
         }
 
-        h1 span {
-            color: #1478ff;
-        }
 
         .description {
-            text-align: center;
 
             color: #687588;
 
-            font-size: 12px;
+            font-size: 13px;
+
             line-height: 1.6;
 
-            max-width: 390px;
+            margin-bottom: 28px;
 
-            margin: 0 auto 30px;
         }
 
-        .options {
+
+        .languages {
+
             display: flex;
+
             flex-direction: column;
 
             gap: 10px;
 
-            max-width: 440px;
-
-            margin: 0 auto;
         }
 
-        .option {
+
+        .language {
+
             width: 100%;
 
             min-height: 68px;
 
-            padding: 14px 16px;
+            padding: 15px 17px;
 
             border-radius: 15px;
 
-            border: 1px solid rgba(255,255,255,.07);
+            border:
+                1px solid rgba(255,255,255,.08);
 
-            background: rgba(255,255,255,.025);
+            background:
+                rgba(255,255,255,.025);
 
             color: white;
 
             display: flex;
+
             align-items: center;
 
             text-align: left;
 
             cursor: pointer;
 
-            transition: .2s ease;
+            transition:
+                .2s ease;
+
         }
 
-        .option:hover {
-            border-color: rgba(20,120,255,.5);
 
-            background: rgba(20,120,255,.06);
+        .language:hover {
 
-            transform: translateY(-1px);
+            border-color:
+                rgba(20,120,255,.5);
+
+            background:
+                rgba(20,120,255,.06);
+
+            transform:
+                translateY(-1px);
+
         }
 
-        .option.selected {
-            border-color: #1478ff;
 
-            background: rgba(20,120,255,.12);
+        .language.disabled {
 
-            box-shadow:
-                0 0 20px rgba(20,120,255,.08);
-        }
-
-        .option.disabled {
-            opacity: .4;
+            opacity: .35;
 
             cursor: not-allowed;
+
         }
 
-        .option.disabled:hover {
+
+        .language.disabled:hover {
+
             transform: none;
 
             border-color:
-                rgba(255,255,255,.07);
+                rgba(255,255,255,.08);
 
             background:
                 rgba(255,255,255,.025);
+
         }
 
-        .option-info {
+
+        .language-name {
+
             display: flex;
+
             flex-direction: column;
 
-            gap: 4px;
+            gap: 5px;
+
         }
 
-        .option-info strong {
-            font-size: 13px;
+
+        .language-name strong {
+
+            font-size: 14px;
+
+            font-weight: 600;
+
         }
 
-        .option-info small {
-            color: #647184;
+
+        .language-name small {
+
+            color: #657286;
 
             font-size: 10px;
+
         }
 
-        .check {
-            width: 22px;
-            height: 22px;
+
+        .arrow {
+
+            margin-left: auto;
+
+            color: #526074;
+
+            font-size: 18px;
+
+        }
+
+
+        .add-language {
+
+            width: 100%;
+
+            margin-top: 16px;
+
+            height: 46px;
+
+            border-radius: 12px;
+
+            border:
+                1px dashed rgba(255,255,255,.12);
+
+            background: transparent;
+
+            color: #7c899b;
+
+            cursor: pointer;
+
+            font-size: 12px;
+
+            transition: .2s ease;
+
+        }
+
+
+        .add-language:hover {
+
+            color: white;
+
+            border-color:
+                rgba(20,120,255,.5);
+
+            background:
+                rgba(20,120,255,.04);
+
+        }
+
+
+        .loading {
+
+            display: none;
+
+            text-align: center;
+
+            color: #718096;
+
+            font-size: 11px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .loading.show {
+
+            display: block;
+
+        }
+
+
+        .error {
+
+            display: none;
+
+            margin-top: 18px;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            color: #ff8585;
+
+            background:
+                rgba(255,50,50,.07);
+
+            border:
+                1px solid rgba(255,50,50,.12);
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+        }
+
+
+        .error.show {
+
+            display: block;
+
+        }
+
+
+        /* ADD LANGUAGE MODAL */
+
+        .modal-background {
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0,0,0,.72);
+
+            backdrop-filter:
+                blur(8px);
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 100;
+
+        }
+
+
+        .modal-background.show {
+
+            display: flex;
+
+        }
+
+
+        .modal {
+
+            width: 100%;
+
+            max-width: 400px;
+
+            background: #0b0f16;
+
+            border:
+                1px solid rgba(255,255,255,.09);
+
+            border-radius: 20px;
+
+            padding: 26px;
+
+            box-shadow:
+                0 30px 100px rgba(0,0,0,.6);
+
+        }
+
+
+        .modal h2 {
+
+            font-size: 21px;
+
+            margin-bottom: 9px;
+
+        }
+
+
+        .modal p {
+
+            color: #687588;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .modal input {
+
+            width: 100%;
+
+            height: 46px;
+
+            padding: 0 13px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            background:
+                rgba(255,255,255,.03);
+
+            color: white;
+
+            outline: none;
+
+        }
+
+
+        .modal input:focus {
+
+            border-color: #1478ff;
+
+        }
+
+
+        .modal-buttons {
+
+            display: flex;
+
+            gap: 9px;
+
+            margin-top: 14px;
+
+        }
+
+
+        .modal-buttons button {
+
+            flex: 1;
+
+            height: 44px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-size: 11px;
+
+        }
+
+
+        .cancel {
+
+            background:
+                rgba(255,255,255,.04);
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            color: #8995a6;
+
+        }
+
+
+        .submit {
+
+            background: #1478ff;
+
+            border: none;
+
+            color: white;
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .card {
+
+                padding: 25px 20px;
+
+            }
+
+            h1 {
+
+                font-size: 25px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+    <div class="logo">
+        Edu<span>Scroll</span>
+    </div>
+
+
+    <div class="card">
+
+        <div class="step-number">
+            Step 1 of 6
+        </div>
+
+
+        <h1>
+            Choose your language
+        </h1>
+
+
+        <p class="description">
+            Select the language you want to use on EduScroll.
+        </p>
+
+
+        <div class="languages">
+
+
+            <!-- SLOVAK -->
+
+            <button
+                class="language"
+                onclick="selectSlovak()"
+            >
+
+                <div class="language-name">
+
+                    <strong>
+                        Slovenčina
+                    </strong>
+
+                    <small>
+                        Available
+                    </small>
+
+                </div>
+
+                <div class="arrow">
+                    →
+                </div>
+
+            </button>
+
+
+            <!-- ENGLISH -->
+
+            <button
+                class="language disabled"
+                disabled
+            >
+
+                <div class="language-name">
+
+                    <strong>
+                        English
+                    </strong>
+
+                    <small>
+                        Coming soon
+                    </small>
+
+                </div>
+
+            </button>
+
+
+            <!-- FRENCH -->
+
+            <button
+                class="language disabled"
+                disabled
+            >
+
+                <div class="language-name">
+
+                    <strong>
+                        Français
+                    </strong>
+
+                    <small>
+                        Coming soon
+                    </small>
+
+                </div>
+
+            </button>
+
+        </div>
+
+
+        <button
+            class="add-language"
+            onclick="openLanguageModal()"
+        >
+            + Add language
+        </button>
+
+
+        <div
+            class="loading"
+            id="loading"
+        >
+            Saving your language...
+        </div>
+
+
+        <div
+            class="error"
+            id="error"
+        ></div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ADD LANGUAGE MODAL -->
+
+<div
+    class="modal-background"
+    id="languageModal"
+>
+
+    <div class="modal">
+
+        <h2>
+            Add language
+        </h2>
+
+        <p>
+            Tell us which language you would like to see on EduScroll.
+        </p>
+
+
+        <input
+            type="text"
+            id="requestedLanguage"
+            placeholder="Language name"
+        >
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="cancel"
+                onclick="closeLanguageModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="submit"
+                onclick="submitLanguageRequest()"
+            >
+                Submit
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+
+const SUPABASE_URL =
+    "https://oqolleianbsgwczjsuif.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_rjBo1Lk7o7fQXqiHIOmw1g_0JXmrwxz";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+
+const loading =
+    document.getElementById("loading");
+
+
+const errorBox =
+    document.getElementById("error");
+
+
+const languageModal =
+    document.getElementById("languageModal");
+
+
+
+/* =========================================
+   CHECK LOGIN
+========================================= */
+
+
+async function checkUser() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (error || !data.user) {
+
+        window.location.href =
+            "login.html";
+
+        return null;
+
+    }
+
+
+    return data.user;
+
+}
+
+
+
+/* =========================================
+   SELECT SLOVAK
+========================================= */
+
+
+async function selectSlovak() {
+
+    errorBox.classList.remove("show");
+
+    loading.classList.add("show");
+
+
+    const user =
+        await checkUser();
+
+
+    if (!user) {
+
+        return;
+
+    }
+
+
+    /*
+        Save the selected language.
+
+        Upsert means:
+
+        - create profile if it doesn't exist
+        - update profile if it already exists
+    */
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("profiles")
+            .upsert(
+                {
+                    id: user.id,
+                    language: "sk"
+                },
+                {
+                    onConflict: "id"
+                }
+            );
+
+
+    if (error) {
+
+        console.error(
+            error
+        );
+
+        loading.classList.remove(
+            "show"
+        );
+
+        errorBox.textContent =
+            "We couldn't save your language. Please try again.";
+
+        errorBox.classList.add(
+            "show"
+        );
+
+        return;
+
+    }
+
+
+    /*
+        Language successfully saved.
+
+        The next onboarding part will be
+        added here later.
+    */
+
+
+    loading.textContent =
+        "Language saved.";
+
+
+    setTimeout(() => {
+
+        showNextPart();
+
+    }, 700);
+
+}
+
+
+
+/* =========================================
+   NEXT PART
+========================================= */
+
+
+<script>
+
+function showNextPart() {
+
+    document.querySelector(".card").innerHTML = `
+
+        <div class="step-number">
+            Step 2 of 6
+        </div>
+
+        <h1>
+            Čo študuješ?
+        </h1>
+
+        <p class="description">
+            Vyber všetko, čo sa ťa týka. Musíš vybrať aspoň jednu možnosť.
+        </p>
+
+
+        <div class="study-options">
+
+
+            <button
+                class="study-option"
+                id="schoolOption"
+                onclick="toggleStudyOption('school')"
+            >
+
+                <div class="study-info">
+
+                    <strong>
+                        Škola
+                    </strong>
+
+                    <small>
+                        Základná, stredná alebo vysoká škola
+                    </small>
+
+                </div>
+
+                <div class="study-check">
+                    ✓
+                </div>
+
+            </button>
+
+
+
+            <button
+                class="study-option"
+                id="hobbyOption"
+                onclick="toggleStudyOption('hobby')"
+            >
+
+                <div class="study-info">
+
+                    <strong>
+                        Hobby
+                    </strong>
+
+                    <small>
+                        Veci, ktorým sa venuješ vo voľnom čase
+                    </small>
+
+                </div>
+
+                <div class="study-check">
+                    ✓
+                </div>
+
+            </button>
+
+
+
+            <button
+                class="study-option"
+                id="sportOption"
+                onclick="toggleStudyOption('sport')"
+            >
+
+                <div class="study-info">
+
+                    <strong>
+                        Šport
+                    </strong>
+
+                    <small>
+                        Športy a bojové umenia
+                    </small>
+
+                </div>
+
+                <div class="study-check">
+                    ✓
+                </div>
+
+            </button>
+
+        </div>
+
+
+        <button
+            class="continue-button"
+            onclick="continueFromStudy()"
+        >
+            Ďalej
+        </button>
+
+
+        <div
+            class="study-error"
+            id="studyError"
+        >
+            Vyber aspoň jednu možnosť.
+        </div>
+
+    `;
+
+
+    const style = document.createElement("style");
+
+    style.innerHTML = `
+
+        .study-options {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+            margin-top: 25px;
+
+        }
+
+
+        .study-option {
+
+            width: 100%;
+
+            min-height: 75px;
+
+            padding: 15px 17px;
+
+            display: flex;
+
+            align-items: center;
+
+            text-align: left;
+
+            border-radius: 15px;
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            background:
+                rgba(255,255,255,.025);
+
+            color: white;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+
+        }
+
+
+        .study-option:hover {
+
+            border-color:
+                rgba(20,120,255,.5);
+
+            background:
+                rgba(20,120,255,.06);
+
+        }
+
+
+        .study-option.selected {
+
+            background:
+                rgba(20,120,255,.10);
+
+            border-color:
+                #1478ff;
+
+            box-shadow:
+                0 0 25px
+                rgba(20,120,255,.08);
+
+        }
+
+
+        .study-info {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 5px;
+
+        }
+
+
+        .study-info strong {
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+        }
+
+
+        .study-info small {
+
+            color: #687588;
+
+            font-size: 10px;
+
+        }
+
+
+        .study-check {
+
+            width: 23px;
+
+            height: 23px;
 
             margin-left: auto;
 
             display: flex;
+
             align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            border:
+                1px solid rgba(255,255,255,.12);
+
+            color: transparent;
+
+            font-size: 11px;
+
+            transition: .2s ease;
+
+        }
+
+
+        .study-option.selected
+        .study-check {
+
+            background:
+                #1478ff;
+
+            border-color:
+                #1478ff;
+
+            color: white;
+
+        }
+
+
+        .continue-button {
+
+            width: 100%;
+
+            height: 47px;
+
+            margin-top: 20px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background:
+                #1478ff;
+
+            color: white;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+
+        }
+
+
+        .continue-button:hover {
+
+            background:
+                #2583ff;
+
+            box-shadow:
+                0 8px 30px
+                rgba(20,120,255,.18);
+
+        }
+
+
+        .study-error {
+
+            display: none;
+
+            margin-top: 12px;
+
+            text-align: center;
+
+            color: #ff7777;
+
+            font-size: 11px;
+
+        }
+
+
+        .study-error.show {
+
+            display: block;
+
+        }
+
+    `;
+
+    document.head.appendChild(style);
+
+
+    window.selectedStudyTypes = [];
+
+}
+
+
+
+/* =========================================
+   SELECT STUDY TYPE
+========================================= */
+
+
+function toggleStudyOption(type) {
+
+    const index =
+        window.selectedStudyTypes.indexOf(type);
+
+
+    if (index === -1) {
+
+        window.selectedStudyTypes.push(type);
+
+    } else {
+
+        window.selectedStudyTypes.splice(
+            index,
+            1
+        );
+
+    }
+
+
+    const button =
+        document.getElementById(
+            type + "Option"
+        );
+
+
+    if (
+        window.selectedStudyTypes.includes(type)
+    ) {
+
+        button.classList.add(
+            "selected"
+        );
+
+    } else {
+
+        button.classList.remove(
+            "selected"
+        );
+
+    }
+
+
+    document
+        .getElementById(
+            "studyError"
+        )
+        .classList.remove(
+            "show"
+        );
+
+}
+
+
+
+/* =========================================
+   CONTINUE
+========================================= */
+
+
+<script>
+
+function continueFromStudy() {
+
+    if (
+        window.selectedStudyTypes.length === 0
+    ) {
+
+        document
+            .getElementById("studyError")
+            .classList.add("show");
+
+        return;
+    }
+
+
+    /*
+        If the user selected SCHOOL,
+        show the school setup first.
+    */
+
+    if (
+        window.selectedStudyTypes.includes("school")
+    ) {
+
+        showSchoolPart();
+
+        return;
+    }
+
+
+    /*
+        Hobby / Sport will be handled later.
+    */
+
+    console.log(
+        "Next selected section:",
+        window.selectedStudyTypes
+    );
+
+}
+
+
+
+/* =========================================
+   PART 3 — SCHOOL
+========================================= */
+
+
+function showSchoolPart() {
+
+    document.querySelector(".card").innerHTML = `
+
+        <div class="step-number">
+            Step 3 of 6
+        </div>
+
+
+        <h1>
+            Škola
+        </h1>
+
+
+        <p class="description">
+            Vyber, aký typ školy momentálne študuješ.
+        </p>
+
+
+        <div class="school-types">
+
+
+            <!-- ZŠ -->
+
+            <button
+                class="school-type"
+                id="elementarySchool"
+                onclick="selectSchoolType('zš')"
+            >
+
+                <div class="school-info">
+
+                    <strong>
+                        Základná škola
+                    </strong>
+
+                    <small>
+                        ZŠ
+                    </small>
+
+                </div>
+
+                <div class="school-check">
+                    ✓
+                </div>
+
+            </button>
+
+
+            <!-- SŠ -->
+
+            <button
+                class="school-type"
+                id="highSchool"
+                onclick="selectSchoolType('sš')"
+            >
+
+                <div class="school-info">
+
+                    <strong>
+                        Stredná škola
+                    </strong>
+
+                    <small>
+                        SŠ
+                    </small>
+
+                </div>
+
+                <div class="school-check">
+                    ✓
+                </div>
+
+            </button>
+
+
+            <!-- VŠ -->
+
+            <button
+                class="school-type"
+                id="university"
+                onclick="selectSchoolType('vš')"
+            >
+
+                <div class="school-info">
+
+                    <strong>
+                        Vysoká škola
+                    </strong>
+
+                    <small>
+                        VŠ
+                    </small>
+
+                </div>
+
+                <div class="school-check">
+                    ✓
+                </div>
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="examSection"
+            style="display:none;"
+        >
+
+            <div class="section-title">
+                Prijímačky
+            </div>
+
+            <p class="section-description">
+                Chystáš sa na prijímačky?
+            </p>
+
+
+            <div class="exam-options">
+
+
+                <!-- SŠ EXAM -->
+
+                <button
+                    class="exam-option"
+                    id="secondaryExam"
+                    onclick="toggleExam('secondary')"
+                >
+
+                    <div class="exam-info">
+
+                        <strong>
+                            Prijímačky na strednú školu
+                        </strong>
+
+                        <small>
+                            Príprava na prijímacie skúšky na SŠ
+                        </small>
+
+                    </div>
+
+                    <div class="exam-check">
+                        ✓
+                    </div>
+
+                </button>
+
+
+                <!-- VŠ EXAM -->
+
+                <button
+                    class="exam-option"
+                    id="universityExam"
+                    onclick="toggleExam('university')"
+                >
+
+                    <div class="exam-info">
+
+                        <strong>
+                            Prijímačky na vysokú školu
+                        </strong>
+
+                        <small>
+                            Príprava na prijímacie skúšky na VŠ
+                        </small>
+
+                    </div>
+
+                    <div class="exam-check">
+                        ✓
+                    </div>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="continue-button"
+            onclick="continueSchool()"
+        >
+            Ďalej
+        </button>
+
+
+        <div
+            class="school-error"
+            id="schoolError"
+        >
+            Vyber typ školy.
+        </div>
+
+    `;
+
+
+    window.selectedSchoolType = null;
+
+    window.selectedExams = [];
+
+
+    addSchoolStyles();
+
+}
+
+
+
+/* =========================================
+   SCHOOL TYPE
+========================================= */
+
+
+function selectSchoolType(type) {
+
+    window.selectedSchoolType = type;
+
+
+    document
+        .querySelectorAll(".school-type")
+        .forEach(button => {
+
+            button.classList.remove(
+                "selected"
+            );
+
+        });
+
+
+    if (type === "zš") {
+
+        document
+            .getElementById(
+                "elementarySchool"
+            )
+            .classList.add("selected");
+
+    }
+
+
+    if (type === "sš") {
+
+        document
+            .getElementById(
+                "highSchool"
+            )
+            .classList.add("selected");
+
+    }
+
+
+    if (type === "vš") {
+
+        document
+            .getElementById(
+                "university"
+            )
+            .classList.add("selected");
+
+    }
+
+
+    /*
+        Show admissions after
+        selecting school type.
+    */
+
+    const examSection =
+        document.getElementById(
+            "examSection"
+        );
+
+
+    examSection.style.display =
+        "block";
+
+
+    /*
+        Reset previous exam selection.
+    */
+
+    window.selectedExams = [];
+
+
+    document
+        .querySelectorAll(".exam-option")
+        .forEach(button => {
+
+            button.classList.remove(
+                "selected"
+            );
+
+            button.style.display =
+                "flex";
+
+        });
+
+
+    /*
+        ZŠ → only secondary school exam
+    */
+
+    if (type === "zš") {
+
+        document
+            .getElementById(
+                "universityExam"
+            )
+            .style.display =
+                "none";
+
+    }
+
+
+    /*
+        SŠ → only university exam
+    */
+
+    if (type === "sš") {
+
+        document
+            .getElementById(
+                "secondaryExam"
+            )
+            .style.display =
+                "none";
+
+    }
+
+
+    /*
+        VŠ → no admissions selection
+    */
+
+    if (type === "vš") {
+
+        examSection.style.display =
+            "none";
+
+    }
+
+
+    document
+        .getElementById(
+            "schoolError"
+        )
+        .classList.remove(
+            "show"
+        );
+
+}
+
+
+
+/* =========================================
+   EXAM SELECTION
+========================================= */
+
+
+function toggleExam(type) {
+
+    const index =
+        window.selectedExams.indexOf(
+            type
+        );
+
+
+    if (index === -1) {
+
+        window.selectedExams.push(
+            type
+        );
+
+    } else {
+
+        window.selectedExams.splice(
+            index,
+            1
+        );
+
+    }
+
+
+    const button =
+        type === "secondary"
+            ? document.getElementById(
+                "secondaryExam"
+            )
+            : document.getElementById(
+                "universityExam"
+            );
+
+
+    if (
+        window.selectedExams.includes(type)
+    ) {
+
+        button.classList.add(
+            "selected"
+        );
+
+    } else {
+
+        button.classList.remove(
+            "selected"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================
+   CONTINUE SCHOOL
+========================================= */
+
+
+async function continueSchool() {
+
+    if (
+        !window.selectedSchoolType
+    ) {
+
+        document
+            .getElementById(
+                "schoolError"
+            )
+            .classList.add(
+                "show"
+            );
+
+        return;
+
+    }
+
+
+    /*
+        Save school type.
+    */
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        error ||
+        !data.user
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    /*
+        Save the basic school information
+        to the profile.
+    */
+
+    const {
+        error: updateError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+
+                school_type:
+                    window.selectedSchoolType,
+
+                entrance_exams:
+                    window.selectedExams
+
+            })
+            .eq(
+                "id",
+                data.user.id
+            );
+
+
+    if (updateError) {
+
+        console.error(
+            updateError
+        );
+
+        /*
+            If these columns don't exist yet,
+            we'll add them later when we build
+            the complete database.
+        */
+
+    }
+
+
+    /*
+        Next screen depends on school type.
+    */
+
+
+    if (
+        window.selectedSchoolType === "zš"
+    ) {
+
+        showElementarySchool();
+
+        return;
+
+    }
+
+
+    if (
+        window.selectedSchoolType === "sš"
+    ) {
+
+        showHighSchool();
+
+        return;
+
+    }
+
+
+    if (
+        window.selectedSchoolType === "vš"
+    ) {
+
+        showUniversity();
+
+        return;
+
+    }
+
+}
+
+
+
+/* =========================================
+   TEMPORARY NEXT SCREENS
+========================================= */
+
+
+<script>
+
+function showElementarySchool() {
+
+    document.querySelector(".card").innerHTML = `
+
+        <div class="step-number">
+            Step 4 of 6
+        </div>
+
+        <h1>
+            Základná škola
+        </h1>
+
+        <p class="description">
+            Vyber svoj aktuálny ročník.
+        </p>
+
+
+        <div class="grade-grid">
+
+            ${
+
+                Array.from(
+                    { length: 9 },
+                    (_, index) => {
+
+                        const grade =
+                            index + 1;
+
+                        return `
+
+                            <button
+                                class="grade-option"
+                                id="grade-${grade}"
+                                onclick="selectElementaryGrade(${grade})"
+                            >
+
+                                <span>
+                                    ${grade}. ročník
+                                </span>
+
+                                <span class="grade-check">
+                                    ✓
+                                </span>
+
+                            </button>
+
+                        `;
+
+                    }
+
+                ).join("")
+
+            }
+
+        </div>
+
+
+        <button
+            class="continue-button"
+            onclick="continueElementaryGrade()"
+        >
+            Ďalej
+        </button>
+
+
+        <div
+            class="school-error"
+            id="elementaryError"
+        >
+            Vyber svoj ročník.
+        </div>
+
+    `;
+
+
+    window.selectedElementaryGrade = null;
+
+
+    addElementaryStyles();
+
+}
+
+
+
+/* =========================================
+   SELECT GRADE
+========================================= */
+
+
+function selectElementaryGrade(grade) {
+
+    window.selectedElementaryGrade =
+        grade;
+
+
+    document
+        .querySelectorAll(".grade-option")
+        .forEach(button => {
+
+            button.classList.remove(
+                "selected"
+            );
+
+        });
+
+
+    const selectedButton =
+        document.getElementById(
+            "grade-" + grade
+        );
+
+
+    if (selectedButton) {
+
+        selectedButton.classList.add(
+            "selected"
+        );
+
+    }
+
+
+    const error =
+        document.getElementById(
+            "elementaryError"
+        );
+
+
+    if (error) {
+
+        error.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================
+   CONTINUE FROM GRADE
+========================================= */
+
+
+async function continueElementaryGrade() {
+
+    if (
+        !window.selectedElementaryGrade
+    ) {
+
+        document
+            .getElementById(
+                "elementaryError"
+            )
+            .classList.add(
+                "show"
+            );
+
+        return;
+
+    }
+
+
+    /*
+        Save selected grade.
+    */
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        error ||
+        !data.user
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    const {
+        error: updateError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+
+                school_grade:
+                    window.selectedElementaryGrade
+
+            })
+            .eq(
+                "id",
+                data.user.id
+            );
+
+
+    if (updateError) {
+
+        console.error(
+            "Grade save error:",
+            updateError
+        );
+
+    }
+
+
+    /*
+        Show subjects for selected grade.
+    */
+
+    showElementarySubjects();
+
+}
+
+
+
+/* =========================================
+   SUBJECTS BY GRADE
+========================================= */
+
+
+const elementarySubjects = {
+
+    1: [
+        "Slovenský jazyk a literatúra",
+        "Matematika",
+        "Prvouka",
+        "Anglický jazyk",
+        "Hudobná výchova",
+        "Výtvarná výchova",
+        "Telesná a športová výchova"
+    ],
+
+
+    2: [
+        "Slovenský jazyk a literatúra",
+        "Matematika",
+        "Prvouka",
+        "Anglický jazyk",
+        "Hudobná výchova",
+        "Výtvarná výchova",
+        "Telesná a športová výchova"
+    ],
+
+
+    3: [
+        "Slovenský jazyk a literatúra",
+        "Matematika",
+        "Prírodoveda",
+        "Vlastiveda",
+        "Anglický jazyk",
+        "Hudobná výchova",
+        "Výtvarná výchova",
+        "Telesná a športová výchova"
+    ],
+
+
+    4: [
+        "Slovenský jazyk a literatúra",
+        "Matematika",
+        "Prírodoveda",
+        "Vlastiveda",
+        "Anglický jazyk",
+        "Hudobná výchova",
+        "Výtvarná výchova",
+        "Telesná a športová výchova"
+    ],
+
+
+    5: [
+        "Slovenský jazyk a literatúra",
+        "Matematika",
+        "Anglický jazyk",
+        "Biológia",
+        "Dejepis",
+        "Geografia",
+        "Informatika",
+        "Hudobná výchova",
+        "Výtvarná výchova",
+        "Telesná a športová výchova"
+    ],
+
+
+    6: [
+        "Slovenský jazyk a literatúra",
+        "Matematika",
+        "Anglický jazyk",
+        "Biológia",
+        "Dejepis",
+        "Geografia",
+        "Fyzika",
+        "Informatika",
+        "Telesná a športová výchova"
+    ],
+
+
+    7: [
+        "Slovenský jazyk a literatúra",
+        "Matematika",
+        "Anglický jazyk",
+        "Biológia",
+        "Dejepis",
+        "Geografia",
+        "Fyzika",
+        "Chémia",
+        "Informatika",
+        "Občianska náuka",
+        "Telesná a športová výchova"
+    ],
+
+
+    8: [
+        "Slovenský jazyk a literatúra",
+        "Matematika",
+        "Anglický jazyk",
+        "Biológia",
+        "Dejepis",
+        "Geografia",
+        "Fyzika",
+        "Chémia",
+        "Občianska náuka",
+        "Informatika",
+        "Telesná a športová výchova"
+    ],
+
+
+    9: [
+        "Slovenský jazyk a literatúra",
+        "Matematika",
+        "Anglický jazyk",
+        "Biológia",
+        "Dejepis",
+        "Geografia",
+        "Fyzika",
+        "Chémia",
+        "Občianska náuka",
+        "Informatika",
+        "Telesná a športová výchova"
+    ]
+
+};
+
+
+
+/* =========================================
+   SHOW SUBJECTS
+========================================= */
+
+
+function showElementarySubjects() {
+
+    const grade =
+        window.selectedElementaryGrade;
+
+
+    const subjects =
+        elementarySubjects[grade] || [];
+
+
+    document.querySelector(
+        ".card"
+    ).innerHTML = `
+
+        <div class="step-number">
+            Step 4 of 6
+        </div>
+
+
+        <h1>
+            Tvoje predmety
+        </h1>
+
+
+        <p class="description">
+            Predmety pre ${grade}. ročník základnej školy.
+        </p>
+
+
+        <div class="subject-list">
+
+            ${
+
+                subjects.map(
+                    (subject, index) => `
+
+                        <div class="subject-item">
+
+                            <span>
+                                ${subject}
+                            </span>
+
+                            <span class="subject-number">
+                                ${index + 1}
+                            </span>
+
+                        </div>
+
+                    `
+                ).join("")
+
+            }
+
+        </div>
+
+
+        <button
+            class="continue-button"
+            onclick="continueElementarySubjects()"
+        >
+            Ďalej
+        </button>
+
+    `;
+
+
+    addElementaryStyles();
+
+}
+
+
+
+/* =========================================
+   CONTINUE SUBJECTS
+========================================= */
+
+
+async function continueElementarySubjects() {
+
+    const grade =
+        window.selectedElementaryGrade;
+
+
+    const subjects =
+        elementarySubjects[grade] || [];
+
+
+    /*
+        Save subjects to Supabase.
+    */
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        error ||
+        !data.user
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    const {
+        error: updateError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+
+                school_subjects:
+                    subjects
+
+            })
+            .eq(
+                "id",
+                data.user.id
+            );
+
+
+    if (updateError) {
+
+        console.error(
+            "Subjects save error:",
+            updateError
+        );
+
+    }
+
+
+    /*
+        For now show the next step.
+        We will connect this to the actual
+        Hobby / Sport / Exams flow later.
+    */
+
+    showElementaryNextStep();
+
+}
+
+
+
+/* =========================================
+   NEXT STEP
+========================================= */
+
+
+function showElementaryNextStep() {
+
+    const examSelected =
+        window.selectedExams &&
+        window.selectedExams.includes(
+            "secondary"
+        );
+
+
+    document.querySelector(
+        ".card"
+    ).innerHTML = `
+
+        <div class="step-number">
+            Step 5 of 6
+        </div>
+
+
+        <h1>
+            Prijímačky
+        </h1>
+
+
+        <p class="description">
+
+            ${
+                examSelected
+
+                ? "Vybral/a si prípravu na prijímačky na strednú školu."
+
+                : "Príprava na prijímačky na strednú školu zatiaľ nie je vybraná."
+            }
+
+        </p>
+
+
+        <div style="
+            padding:18px;
+            border-radius:14px;
+            background:rgba(20,120,255,.07);
+            border:1px solid rgba(20,120,255,.12);
+            color:#7f8da1;
+            font-size:12px;
+            line-height:1.6;
+        ">
+
+            ${
+                examSelected
+
+                ? "EduScroll ti neskôr pripraví obsah podľa tvojho ročníka a prijímačiek."
+
+                : "Túto časť neskôr prepojíme s ďalšími možnosťami onboardingu."
+            }
+
+        </div>
+
+
+        <button
+            class="continue-button"
+            onclick="finishElementaryPart()"
+        >
+            Ďalej
+        </button>
+
+    `;
+
+}
+
+
+
+/* =========================================
+   TEMPORARY FINISH
+========================================= */
+
+
+function finishElementaryPart() {
+
+    /*
+        This will later check whether
+        Hobby or Sport was selected.
+
+        Example:
+
+        School ✓
+        Hobby ✓
+        Sport ✗
+
+        → go to Hobby
+
+        School ✓
+        Hobby ✗
+        Sport ✓
+
+        → go to Sport
+
+        School ✓
+        Hobby ✗
+        Sport ✗
+
+        → finish onboarding
+    */
+
+
+    if (
+        window.selectedStudyTypes &&
+        window.selectedStudyTypes.includes(
+            "hobby"
+        )
+    ) {
+
+        console.log(
+            "Next: Hobby"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        window.selectedStudyTypes &&
+        window.selectedStudyTypes.includes(
+            "sport"
+        )
+    ) {
+
+        console.log(
+            "Next: Sport"
+        );
+
+        return;
+
+    }
+
+
+    console.log(
+        "School onboarding finished."
+    );
+
+}
+
+
+
+/* =========================================
+   ZŠ STYLES
+========================================= */
+
+
+function addElementaryStyles() {
+
+    if (
+        document.getElementById(
+            "elementaryStyles"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const style =
+        document.createElement(
+            "style"
+        );
+
+
+    style.id =
+        "elementaryStyles";
+
+
+    style.innerHTML = `
+
+        .grade-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 9px;
+
+            margin-top: 25px;
+
+        }
+
+
+        .grade-option {
+
+            min-height: 58px;
+
+            border-radius: 13px;
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            background:
+                rgba(255,255,255,.025);
+
+            color: white;
+
+            cursor: pointer;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 5px;
+
+            font-size: 11px;
+
+            transition: .2s ease;
+
+        }
+
+
+        .grade-option:hover {
+
+            border-color:
+                rgba(20,120,255,.5);
+
+            background:
+                rgba(20,120,255,.06);
+
+        }
+
+
+        .grade-option.selected {
+
+            background:
+                rgba(20,120,255,.11);
+
+            border-color:
+                #1478ff;
+
+            box-shadow:
+                0 0 20px
+                rgba(20,120,255,.07);
+
+        }
+
+
+        .grade-check {
+
+            width: 17px;
+
+            height: 17px;
+
+            display: flex;
+
+            align-items: center;
+
             justify-content: center;
 
             border-radius: 50%;
@@ -262,36 +2677,1869 @@
 
             color: transparent;
 
-            font-size: 11px;
+            font-size: 8px;
+
         }
 
-        .selected .check {
-            background: #1478ff;
 
-            border-color: #1478ff;
+        .grade-option.selected
+        .grade-check {
+
+            background:
+                #1478ff;
+
+            border-color:
+                #1478ff;
 
             color: white;
+
         }
 
-        .multi-options {
-            display: grid;
 
-            grid-template-columns:
-                repeat(2, 1fr);
+        .subject-list {
 
-            gap: 9px;
+            display: flex;
 
-            max-height: 300px;
+            flex-direction: column;
+
+            gap: 7px;
+
+            margin-top: 22px;
+
+            max-height: 360px;
 
             overflow-y: auto;
 
-            padding-right: 4px;
+            padding-right: 3px;
+
         }
 
-        .multi-option {
-            min-height: 52px;
 
-            padding: 10px 12px;
+        .subject-item {
+
+            min-height: 45px;
+
+            padding: 10px 13px;
+
+            border-radius: 11px;
+
+            background:
+                rgba(255,255,255,.025);
+
+            border:
+                1px solid rgba(255,255,255,.06);
+
+            display: flex;
+
+            align-items: center;
+
+            font-size: 11px;
+
+        }
+
+
+        .subject-number {
+
+            margin-left: auto;
+
+            width: 21px;
+
+            height: 21px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: #5e6c80;
+
+            background:
+                rgba(255,255,255,.04);
+
+            font-size: 9px;
+
+        }
+
+
+        @media(max-width:500px) {
+
+            .grade-grid {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+
+            }
+
+        }
+
+    `;
+
+
+    document.head.appendChild(
+        style
+    );
+
+}
+
+</script>
+
+
+
+
+<script>
+
+function showHighSchool() {
+
+    document.querySelector(".card").innerHTML = `
+
+        <div class="step-number">
+            Step 4 of 6
+        </div>
+
+        <h1>
+            Stredná škola
+        </h1>
+
+        <p class="description">
+            Vyber kraj, v ktorom sa nachádza tvoja stredná škola.
+        </p>
+
+        <div class="region-list">
+
+            <button
+                class="region-option"
+                onclick="selectHighSchoolRegion('Bratislavský kraj')"
+            >
+                <span>
+                    Bratislavský kraj
+                </span>
+
+                <span class="region-action">
+                    Zobraziť
+                </span>
+            </button>
+
+
+            <button
+                class="region-option"
+                onclick="selectHighSchoolRegion('Trnavský kraj')"
+            >
+                <span>
+                    Trnavský kraj
+                </span>
+
+                <span class="region-action">
+                    Zobraziť
+                </span>
+            </button>
+
+
+            <button
+                class="region-option"
+                onclick="selectHighSchoolRegion('Trenčiansky kraj')"
+            >
+                <span>
+                    Trenčiansky kraj
+                </span>
+
+                <span class="region-action">
+                    Zobraziť
+                </span>
+            </button>
+
+
+            <button
+                class="region-option"
+                onclick="selectHighSchoolRegion('Nitriansky kraj')"
+            >
+                <span>
+                    Nitriansky kraj
+                </span>
+
+                <span class="region-action">
+                    Zobraziť
+                </span>
+            </button>
+
+
+            <button
+                class="region-option"
+                onclick="selectHighSchoolRegion('Žilinský kraj')"
+            >
+                <span>
+                    Žilinský kraj
+                </span>
+
+                <span class="region-action">
+                    Zobraziť
+                </span>
+            </button>
+
+
+            <button
+                class="region-option"
+                onclick="selectHighSchoolRegion('Banskobystrický kraj')"
+            >
+                <span>
+                    Banskobystrický kraj
+                </span>
+
+                <span class="region-action">
+                    Zobraziť
+                </span>
+            </button>
+
+
+            <button
+                class="region-option"
+                onclick="selectHighSchoolRegion('Prešovský kraj')"
+            >
+                <span>
+                    Prešovský kraj
+                </span>
+
+                <span class="region-action">
+                    Zobraziť
+                </span>
+            </button>
+
+
+            <button
+                class="region-option"
+                onclick="selectHighSchoolRegion('Košický kraj')"
+            >
+                <span>
+                    Košický kraj
+                </span>
+
+                <span class="region-action">
+                    Zobraziť
+                </span>
+            </button>
+
+        </div>
+
+
+        <div
+            class="school-error"
+            id="regionError"
+        >
+            Vyber kraj.
+        </div>
+
+    `;
+
+
+    window.selectedHighSchoolRegion = null;
+
+    addRegionStyles();
+
+}
+
+
+
+/* =========================================
+   SELECT REGION
+========================================= */
+
+
+async function selectHighSchoolRegion(region) {
+
+    window.selectedHighSchoolRegion =
+        region;
+
+
+    /*
+        Visual selection
+    */
+
+    document
+        .querySelectorAll(".region-option")
+        .forEach(button => {
+
+            button.classList.remove(
+                "selected"
+            );
+
+        });
+
+
+    const buttons =
+        document.querySelectorAll(
+            ".region-option"
+        );
+
+
+    buttons.forEach(button => {
+
+        if (
+            button
+                .querySelector("span")
+                .textContent
+                .trim() === region
+        ) {
+
+            button.classList.add(
+                "selected"
+            );
+
+        }
+
+    });
+
+
+    /*
+        Get logged-in user
+    */
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        error ||
+        !data.user
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    /*
+        Save region to Supabase
+    */
+
+    const {
+        error: updateError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+
+                school_region:
+                    region
+
+            })
+            .eq(
+                "id",
+                data.user.id
+            );
+
+
+    if (updateError) {
+
+        console.error(
+            "Region save error:",
+            updateError
+        );
+
+    }
+
+
+    /*
+        Open schools in this region.
+    */
+
+    setTimeout(() => {
+
+        showHighSchoolsList(region);
+
+    }, 250);
+
+}
+
+
+
+/* =========================================
+   SCHOOLS IN REGION
+========================================= */
+
+
+function showHighSchoolsList(region) {
+
+    document.querySelector(".card").innerHTML = `
+
+        <div class="step-number">
+            Step 4 of 6
+        </div>
+
+        <h1>
+            ${region}
+        </h1>
+
+        <p class="description">
+            Vyber svoju strednú školu.
+        </p>
+
+
+        <div class="school-search">
+
+            <input
+                type="text"
+                id="schoolSearch"
+                placeholder="Hľadať školu..."
+                oninput="filterHighSchools()"
+            >
+
+        </div>
+
+
+        <div
+            class="high-school-list"
+            id="highSchoolList"
+        >
+
+            <div class="school-placeholder">
+
+                Zoznam škôl pre tento kraj
+                doplníme v ďalšom kroku.
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="back-button"
+            onclick="showHighSchool()"
+        >
+            Späť
+        </button>
+
+    `;
+
+
+    /*
+        For now we use an empty list.
+
+        When you provide the actual schools,
+        they will be inserted here.
+    */
+
+    window.highSchoolsForRegion = [];
+
+
+    addRegionStyles();
+
+}
+
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+
+function filterHighSchools() {
+
+    const search =
+        document
+            .getElementById(
+                "schoolSearch"
+            )
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const list =
+        document.getElementById(
+            "highSchoolList"
+        );
+
+
+    const schools =
+        window.highSchoolsForRegion || [];
+
+
+    const filtered =
+        schools.filter(
+            school =>
+                school
+                    .toLowerCase()
+                    .includes(search)
+        );
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+        list.innerHTML = `
+
+            <div class="school-placeholder">
+
+                Zatiaľ nemáme pridané školy
+                pre tento kraj.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        filtered
+            .map(
+                school => `
+
+                    <button
+                        class="high-school"
+                        onclick="selectHighSchool('${school}')"
+                    >
+
+                        ${school}
+
+                    </button>
+
+                `
+            )
+            .join("");
+
+}
+
+
+
+/* =========================================
+   SELECT SCHOOL
+========================================= */
+
+
+async function selectHighSchool(school) {
+
+    window.selectedHighSchool =
+        school;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        error ||
+        !data.user
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    const {
+        error: updateError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+
+                school_name:
+                    school
+
+            })
+            .eq(
+                "id",
+                data.user.id
+            );
+
+
+    if (updateError) {
+
+        console.error(
+            "School save error:",
+            updateError
+        );
+
+    }
+
+
+    /*
+        Next step will be the grade.
+    */
+
+    showHighSchoolGrade();
+
+}
+
+
+
+/* =========================================
+   HIGH SCHOOL GRADE
+========================================= */
+
+
+function showHighSchoolGrade() {
+
+    document.querySelector(".card").innerHTML = `
+
+        <div class="step-number">
+            Step 5 of 6
+        </div>
+
+        <h1>
+            Tvoj ročník
+        </h1>
+
+        <p class="description">
+            Vyber svoj aktuálny ročník na strednej škole.
+        </p>
+
+
+        <div class="grade-grid">
+
+            ${
+
+                [1, 2, 3, 4]
+                    .map(
+                        grade => `
+
+                            <button
+                                class="grade-option"
+                                onclick="selectHighSchoolGrade(${grade})"
+                            >
+
+                                ${grade}. ročník
+
+                            </button>
+
+                        `
+                    )
+                    .join("")
+
+            }
+
+        </div>
+
+
+        <div
+            class="school-error"
+            id="highSchoolGradeError"
+        >
+            Vyber svoj ročník.
+        </div>
+
+    `;
+
+
+    window.selectedHighSchoolGrade =
+        null;
+
+
+    addRegionStyles();
+
+}
+
+
+
+/* =========================================
+   SELECT HIGH SCHOOL GRADE
+========================================= */
+
+
+async function selectHighSchoolGrade(grade) {
+
+    window.selectedHighSchoolGrade =
+        grade;
+
+
+    document
+        .querySelectorAll(".grade-option")
+        .forEach(button => {
+
+            button.classList.remove(
+                "selected"
+            );
+
+        });
+
+
+    event.currentTarget.classList.add(
+        "selected"
+    );
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        error ||
+        !data.user
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    await supabaseClient
+        .from("profiles")
+        .update({
+
+            school_grade:
+                grade
+
+        })
+        .eq(
+            "id",
+            data.user.id
+        );
+
+
+    /*
+        Subjects will be the next part.
+    */
+
+    setTimeout(() => {
+
+        showHighSchoolSubjects();
+
+    }, 250);
+
+}
+
+
+
+/* =========================================
+   TEMPORARY SUBJECT SCREEN
+========================================= */
+
+
+function showHighSchoolSubjects() {
+
+    document.querySelector(".card").innerHTML = `
+
+        <div class="step-number">
+            Step 5 of 6
+        </div>
+
+        <h1>
+            Predmety
+        </h1>
+
+        <p class="description">
+            Predmety pre tvoj ročník strednej školy
+            nastavíme v ďalšej časti.
+        </p>
+
+
+        <div class="school-placeholder">
+
+            ${window.selectedHighSchoolGrade}.
+            ročník
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =========================================
+   STYLES
+========================================= */
+
+
+function addRegionStyles() {
+
+    if (
+        document.getElementById(
+            "regionStyles"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const style =
+        document.createElement(
+            "style"
+        );
+
+
+    style.id =
+        "regionStyles";
+
+
+    style.innerHTML = `
+
+        .region-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+
+            margin-top: 22px;
+
+        }
+
+
+        .region-option {
+
+            width: 100%;
+
+            min-height: 53px;
+
+            padding: 0 15px;
+
+            display: flex;
+
+            align-items: center;
+
+            text-align: left;
+
+            border-radius: 12px;
+
+            border:
+                1px solid rgba(255,255,255,.07);
+
+            background:
+                rgba(255,255,255,.025);
+
+            color: white;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+
+        }
+
+
+        .region-option:hover {
+
+            background:
+                rgba(20,120,255,.06);
+
+            border-color:
+                rgba(20,120,255,.45);
+
+        }
+
+
+        .region-option.selected {
+
+            background:
+                rgba(20,120,255,.10);
+
+            border-color:
+                #1478ff;
+
+        }
+
+
+        .region-action {
+
+            margin-left: auto;
+
+            color:
+                #1478ff;
+
+            font-size: 10px;
+
+        }
+
+
+        .school-search {
+
+            margin-top: 20px;
+
+        }
+
+
+        .school-search input {
+
+            width: 100%;
+
+            height: 45px;
+
+            padding: 0 13px;
+
+            border-radius: 11px;
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            background:
+                rgba(255,255,255,.025);
+
+            color: white;
+
+            outline: none;
+
+            font-size: 11px;
+
+        }
+
+
+        .school-search input:focus {
+
+            border-color:
+                #1478ff;
+
+        }
+
+
+        .high-school-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+
+            margin-top: 12px;
+
+            max-height: 330px;
+
+            overflow-y: auto;
+
+        }
+
+
+        .high-school {
+
+            width: 100%;
+
+            min-height: 47px;
+
+            padding: 10px 13px;
+
+            text-align: left;
+
+            border-radius: 10px;
+
+            border:
+                1px solid rgba(255,255,255,.07);
+
+            background:
+                rgba(255,255,255,.025);
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 11px;
+
+        }
+
+
+        .high-school:hover {
+
+            border-color:
+                #1478ff;
+
+            background:
+                rgba(20,120,255,.07);
+
+        }
+
+
+        .school-placeholder {
+
+            padding: 18px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(255,255,255,.025);
+
+            border:
+                1px solid rgba(255,255,255,.06);
+
+            color: #687588;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+            text-align: center;
+
+        }
+
+
+        .back-button {
+
+            width: 100%;
+
+            height: 43px;
+
+            margin-top: 12px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            background:
+                rgba(255,255,255,.03);
+
+            color: #7f8da1;
+
+            cursor: pointer;
+
+            font-size: 11px;
+
+        }
+
+
+        .back-button:hover {
+
+            color: white;
+
+            background:
+                rgba(255,255,255,.05);
+
+        }
+
+    `;
+
+
+    document.head.appendChild(
+        style
+    );
+
+}
+
+</script>
+
+
+
+<script>
+
+function showUniversity() {
+
+    document.querySelector(".card").innerHTML = `
+
+        <div class="step-number">
+            Step 4 of 6
+        </div>
+
+        <h1>
+            Vysoká škola
+        </h1>
+
+        <p class="description">
+            Vyber oblasť, ktorá ťa najviac zaujíma.
+        </p>
+
+        <div class="university-fields">
+
+            ${
+
+                universityFields
+                    .map((field, index) => `
+
+                        <button
+                            class="university-field"
+                            id="university-field-${index}"
+                            onclick="selectUniversityField(${index})"
+                        >
+
+                            <span>
+                                ${field}
+                            </span>
+
+                            <span class="university-check">
+                                ✓
+                            </span>
+
+                        </button>
+
+                    `)
+                    .join("")
+
+            }
+
+        </div>
+
+
+        <button
+            class="continue-button"
+            onclick="continueUniversityField()"
+        >
+            Ďalej
+        </button>
+
+
+        <div
+            class="school-error"
+            id="universityError"
+        >
+            Vyber oblasť štúdia.
+        </div>
+
+    `;
+
+
+    window.selectedUniversityField = null;
+
+    addUniversityStyles();
+
+}
+
+
+
+/* =========================================
+   UNIVERSITY FIELDS
+========================================= */
+
+
+const universityFields = [
+
+    "Ekonómia a management",
+
+    "Humanitné a spoločenské vedy",
+
+    "Informačné technológie",
+
+    "Jazyky a medzinárodné štúdiá",
+
+    "Kultúra a umenie",
+
+    "Medicína a farmácia",
+
+    "Poľnohospodárstvo a veterina",
+
+    "Právo a verejná správa",
+
+    "Prírodné vedy",
+
+    "Technika",
+
+    "Učiteľstvo a šport",
+
+    "Prestížne MBA odbory",
+
+    "Štúdium pri práci"
+
+];
+
+
+
+/* =========================================
+   SELECT UNIVERSITY FIELD
+========================================= */
+
+
+function selectUniversityField(index) {
+
+    window.selectedUniversityField =
+        universityFields[index];
+
+
+    document
+        .querySelectorAll(".university-field")
+        .forEach(button => {
+
+            button.classList.remove(
+                "selected"
+            );
+
+        });
+
+
+    const selected =
+        document.getElementById(
+            "university-field-" + index
+        );
+
+
+    if (selected) {
+
+        selected.classList.add(
+            "selected"
+        );
+
+    }
+
+
+    document
+        .getElementById(
+            "universityError"
+        )
+        .classList.remove(
+            "show"
+        );
+
+}
+
+
+
+/* =========================================
+   CONTINUE UNIVERSITY FIELD
+========================================= */
+
+
+async function continueUniversityField() {
+
+    if (
+        !window.selectedUniversityField
+    ) {
+
+        document
+            .getElementById(
+                "universityError"
+            )
+            .classList.add(
+                "show"
+            );
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        error ||
+        !data.user
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    const {
+        error: updateError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+
+                university_field:
+                    window.selectedUniversityField
+
+            })
+            .eq(
+                "id",
+                data.user.id
+            );
+
+
+    if (updateError) {
+
+        console.error(
+            "University field save error:",
+            updateError
+        );
+
+    }
+
+
+    showUniversityAdmissions();
+
+}
+
+
+
+/* =========================================
+   UNIVERSITY ADMISSIONS
+========================================= */
+
+
+function showUniversityAdmissions() {
+
+    document.querySelector(".card").innerHTML = `
+
+        <div class="step-number">
+            Step 5 of 6
+        </div>
+
+
+        <h1>
+            Prijímačky
+        </h1>
+
+
+        <p class="description">
+            Chystáš sa na prijímačky na vysokú školu?
+        </p>
+
+
+        <div class="admission-options">
+
+
+            <button
+                class="admission-option"
+                id="medicineAdmission"
+                onclick="selectUniversityAdmission('Medicína')"
+            >
+
+                <div class="admission-info">
+
+                    <strong>
+                        Medicína
+                    </strong>
+
+                    <small>
+                        Príprava na prijímačky na medicínu
+                    </small>
+
+                </div>
+
+
+                <div class="admission-check">
+                    ✓
+                </div>
+
+            </button>
+
+
+
+            <button
+                class="admission-option"
+                id="veterinaryAdmission"
+                onclick="selectUniversityAdmission('Veterina')"
+            >
+
+                <div class="admission-info">
+
+                    <strong>
+                        Veterina
+                    </strong>
+
+                    <small>
+                        Príprava na prijímačky na veterinu
+                    </small>
+
+                </div>
+
+
+                <div class="admission-check">
+                    ✓
+                </div>
+
+            </button>
+
+        </div>
+
+
+        <button
+            class="continue-button"
+            onclick="continueUniversityAdmissions()"
+        >
+            Ďalej
+        </button>
+
+
+        <button
+            class="skip-button"
+            onclick="skipUniversityAdmissions()"
+        >
+            Preskočiť
+        </button>
+
+    `;
+
+
+    window.selectedUniversityAdmission =
+        null;
+
+    addUniversityStyles();
+
+}
+
+
+
+/* =========================================
+   SELECT ADMISSION
+========================================= */
+
+
+function selectUniversityAdmission(type) {
+
+    window.selectedUniversityAdmission =
+        type;
+
+
+    document
+        .querySelectorAll(".admission-option")
+        .forEach(button => {
+
+            button.classList.remove(
+                "selected"
+            );
+
+        });
+
+
+    if (
+        type === "Medicína"
+    ) {
+
+        document
+            .getElementById(
+                "medicineAdmission"
+            )
+            .classList.add(
+                "selected"
+            );
+
+    }
+
+
+    if (
+        type === "Veterina"
+    ) {
+
+        document
+            .getElementById(
+                "veterinaryAdmission"
+            )
+            .classList.add(
+                "selected"
+            );
+
+    }
+
+}
+
+
+
+/* =========================================
+   SAVE ADMISSION
+========================================= */
+
+
+async function continueUniversityAdmissions() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        error ||
+        !data.user
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    const {
+        error: updateError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+
+                university_exam:
+                    window.selectedUniversityAdmission || null
+
+            })
+            .eq(
+                "id",
+                data.user.id
+            );
+
+
+    if (updateError) {
+
+        console.error(
+            "University admission save error:",
+            updateError
+        );
+
+    }
+
+
+    finishUniversityOnboarding();
+
+}
+
+
+
+/* =========================================
+   SKIP ADMISSION
+========================================= */
+
+
+async function skipUniversityAdmissions() {
+
+    window.selectedUniversityAdmission =
+        null;
+
+
+    await continueUniversityAdmissions();
+
+}
+
+
+
+/* =========================================
+   FINISH UNIVERSITY
+========================================= */
+
+
+function finishUniversityOnboarding() {
+
+    /*
+        Later this will check:
+
+        School
+        Hobby
+        Sport
+
+        and decide what onboarding
+        screen should come next.
+    */
+
+
+    if (
+        window.selectedStudyTypes &&
+        window.selectedStudyTypes.includes(
+            "hobby"
+        )
+    ) {
+
+        showHobbyPart();
+
+        return;
+
+    }
+
+
+    if (
+        window.selectedStudyTypes &&
+        window.selectedStudyTypes.includes(
+            "sport"
+        )
+    ) {
+
+        showSportPart();
+
+        return;
+
+    }
+
+
+    finishOnboarding();
+
+}
+
+
+
+/* =========================================
+   TEMPORARY FINISH
+========================================= */
+
+
+function finishOnboarding() {
+
+    document.querySelector(
+        ".card"
+    ).innerHTML = `
+
+        <div class="step-number">
+            Complete
+        </div>
+
+        <h1>
+            Gratulujeme
+        </h1>
+
+        <p class="description">
+            Tvoje nastavenie je pripravené.
+        </p>
+
+        <div class="school-placeholder">
+
+            Pripravujeme tvoj EduScroll...
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =========================================
+   TEMPORARY HOBBY
+========================================= */
+
+
+function showHobbyPart() {
+
+    document.querySelector(
+        ".card"
+    ).innerHTML = `
+
+        <div class="step-number">
+            Next
+        </div>
+
+        <h1>
+            Hobby
+        </h1>
+
+        <p class="description">
+            Výber hobby pridáme v ďalšej časti.
+        </p>
+
+    `;
+
+}
+
+
+
+/* =========================================
+   TEMPORARY SPORT
+========================================= */
+
+
+function showSportPart() {
+
+    document.querySelector(
+        ".card"
+    ).innerHTML = `
+
+        <div class="step-number">
+            Next
+        </div>
+
+        <h1>
+            Šport
+        </h1>
+
+        <p class="description">
+            Výber športov pridáme v ďalšej časti.
+        </p>
+
+    `;
+
+}
+
+
+
+/* =========================================
+   UNIVERSITY STYLES
+========================================= */
+
+
+function addUniversityStyles() {
+
+    if (
+        document.getElementById(
+            "universityStyles"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const style =
+        document.createElement(
+            "style"
+        );
+
+
+    style.id =
+        "universityStyles";
+
+
+    style.innerHTML = `
+
+        .university-fields {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+
+            margin-top: 22px;
+
+            max-height: 390px;
+
+            overflow-y: auto;
+
+            padding-right: 3px;
+
+        }
+
+
+        .university-field {
+
+            width: 100%;
+
+            min-height: 49px;
+
+            padding: 10px 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            text-align: left;
+
+            border-radius: 11px;
+
+            border:
+                1px solid rgba(255,255,255,.07);
+
+            background:
+                rgba(255,255,255,.025);
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 11px;
+
+            transition: .2s ease;
+
+        }
+
+
+        .university-field:hover {
+
+            background:
+                rgba(20,120,255,.06);
+
+            border-color:
+                rgba(20,120,255,.45);
+
+        }
+
+
+        .university-field.selected {
+
+            background:
+                rgba(20,120,255,.10);
+
+            border-color:
+                #1478ff;
+
+        }
+
+
+        .university-check {
+
+            width: 20px;
+
+            height: 20px;
+
+            margin-left: auto;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            border:
+                1px solid rgba(255,255,255,.10);
+
+            color: transparent;
+
+            font-size: 9px;
+
+        }
+
+
+        .university-field.selected
+        .university-check {
+
+            background:
+                #1478ff;
+
+            border-color:
+                #1478ff;
+
+            color: white;
+
+        }
+
+
+        .admission-options {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 9px;
+
+            margin-top: 25px;
+
+        }
+
+
+        .admission-option {
+
+            width: 100%;
+
+            min-height: 67px;
+
+            padding: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            text-align: left;
 
             border-radius: 13px;
 
@@ -305,1902 +4553,656 @@
 
             cursor: pointer;
 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            font-size: 11px;
-
             transition: .2s ease;
+
         }
 
-        .multi-option.selected {
-            border-color: #1478ff;
+
+        .admission-option:hover {
+
+            border-color:
+                rgba(20,120,255,.45);
 
             background:
-                rgba(20,120,255,.12);
+                rgba(20,120,255,.06);
+
         }
 
-        .bottom {
-            position: absolute;
 
-            left: 38px;
-            right: 38px;
-            bottom: 30px;
+        .admission-option.selected {
+
+            border-color:
+                #1478ff;
+
+            background:
+                rgba(20,120,255,.10);
+
+        }
+
+
+        .admission-info {
 
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+            flex-direction: column;
+
+            gap: 5px;
+
         }
 
-        .back {
-            border: none;
-            background: none;
 
-            color: #596678;
+        .admission-info strong {
 
-            cursor: pointer;
+            font-size: 12px;
 
-            font-size: 11px;
         }
 
-        .next {
-            border: none;
 
-            background: #1478ff;
+        .admission-info small {
 
-            color: white;
-
-            padding: 12px 22px;
-
-            border-radius: 11px;
-
-            font-weight: 600;
-
-            cursor: pointer;
-
-            transition: .2s ease;
-        }
-
-        .next:hover {
-            background: #2583ff;
-
-            box-shadow:
-                0 0 25px rgba(20,120,255,.2);
-        }
-
-        .next:disabled {
-            opacity: .35;
-
-            cursor: not-allowed;
-
-            box-shadow: none;
-        }
-
-        .success {
-            text-align: center;
-
-            padding-top: 90px;
-        }
-
-        .success h1 {
-            margin-bottom: 15px;
-        }
-
-        .success p {
             color: #687588;
 
-            font-size: 13px;
+            font-size: 9px;
+
         }
 
-        .loader {
-            width: 32px;
-            height: 32px;
+
+        .admission-check {
+
+            width: 22px;
+
+            height: 22px;
+
+            margin-left: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
 
             border-radius: 50%;
 
             border:
-                2px solid rgba(255,255,255,.08);
+                1px solid rgba(255,255,255,.1);
 
-            border-top-color: #1478ff;
+            color: transparent;
 
-            animation:
-                spin .8s linear infinite;
-
-            margin: 35px auto;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @media(max-width: 500px) {
-
-            .container {
-                padding: 12px;
-            }
-
-            .card {
-                min-height: 650px;
-
-                padding:
-                    38px 20px;
-            }
-
-            .bottom {
-                left: 20px;
-                right: 20px;
-            }
-
-            .multi-options {
-                grid-template-columns:
-                    1fr;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container">
-
-    <div class="card">
-
-        <div
-            class="progress"
-            id="progress"
-        ></div>
-
-        <div class="logo">
-            Edu<span>Scroll</span>
-        </div>
-
-
-        <!-- =====================================
-             PART 1 — LANGUAGE
-        ====================================== -->
-
-        <div
-            class="step active"
-            id="stepLanguage"
-        >
-
-            <div class="step-label">
-                Step 1
-            </div>
-
-            <h1>
-                Choose your language
-            </h1>
-
-            <p class="description">
-                Select the language you'd like
-                to use on EduScroll.
-            </p>
-
-
-            <div class="options">
-
-                <button
-                    class="option"
-                    onclick="selectLanguage(
-                        'sk',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Slovenčina
-                        </strong>
-
-                        <small>
-                            Available
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-
-                <button
-                    class="option disabled"
-                    disabled
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            English
-                        </strong>
-
-                        <small>
-                            Coming soon
-                        </small>
-                    </div>
-
-                </button>
-
-
-                <button
-                    class="option disabled"
-                    disabled
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Français
-                        </strong>
-
-                        <small>
-                            Coming soon
-                        </small>
-                    </div>
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================
-             PART 2 — STUDY AREAS
-        ====================================== -->
-
-        <div
-            class="step"
-            id="stepStudy"
-        >
-
-            <div class="step-label">
-                Krok 2
-            </div>
-
-            <h1>
-                Čo <span>študuješ?</span>
-            </h1>
-
-            <p class="description">
-                Vyber všetky oblasti,
-                ktoré ťa zaujímajú.
-            </p>
-
-
-            <div class="options">
-
-                <button
-                    class="option"
-                    onclick="toggleArea(
-                        'school',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Škola
-                        </strong>
-
-                        <small>
-                            Predmety a učenie
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-
-                <button
-                    class="option"
-                    onclick="toggleArea(
-                        'hobby',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Hobby
-                        </strong>
-
-                        <small>
-                            Tvoje záujmy
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-
-                <button
-                    class="option"
-                    onclick="toggleArea(
-                        'sport',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Šport
-                        </strong>
-
-                        <small>
-                            Športy a pohyb
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================
-             PART 3 — SCHOOL
-        ====================================== -->
-
-        <div
-            class="step"
-            id="stepSchool"
-        >
-
-            <div class="step-label">
-                Krok 3
-            </div>
-
-            <h1>
-                Vyber si <span>školu</span>
-            </h1>
-
-            <p class="description">
-                Vyber typ školy, ktorú navštevuješ.
-            </p>
-
-
-            <div class="options">
-
-                <button
-                    class="option"
-                    onclick="selectSchool(
-                        'ZS',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Základná škola
-                        </strong>
-
-                        <small>
-                            ZŠ
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-
-                <button
-                    class="option"
-                    onclick="selectSchool(
-                        'SS',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Stredná škola
-                        </strong>
-
-                        <small>
-                            SŠ
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-
-                <button
-                    class="option"
-                    onclick="selectSchool(
-                        'VS',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Vysoká škola
-                        </strong>
-
-                        <small>
-                            VŠ
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================
-             GRADE
-        ====================================== -->
-
-        <div
-            class="step"
-            id="stepGrade"
-        >
-
-            <div class="step-label">
-                Krok 4
-            </div>
-
-            <h1>
-                Aký si <span>ročník?</span>
-            </h1>
-
-            <p class="description">
-                Vyber svoj aktuálny ročník.
-            </p>
-
-
-            <div
-                class="options"
-                id="gradeOptions"
-            ></div>
-
-        </div>
-
-
-        <!-- =====================================
-             HOBBIES
-        ====================================== -->
-
-        <div
-            class="step"
-            id="stepHobby"
-        >
-
-            <div class="step-label">
-                Hobby
-            </div>
-
-            <h1>
-                Čo ťa <span>baví?</span>
-            </h1>
-
-            <p class="description">
-                Vyber všetky hobby, ktoré ťa
-                zaujímajú.
-            </p>
-
-
-            <div
-                class="multi-options"
-                id="hobbyOptions"
-            ></div>
-
-        </div>
-
-
-        <!-- =====================================
-             SPORTS
-        ====================================== -->
-
-        <div
-            class="step"
-            id="stepSport"
-        >
-
-            <div class="step-label">
-                Šport
-            </div>
-
-            <h1>
-                Aké <span>športy</span> máš rád?
-            </h1>
-
-            <p class="description">
-                Vyber všetky športy,
-                ktoré ťa zaujímajú.
-            </p>
-
-
-            <div
-                class="multi-options"
-                id="sportOptions"
-            ></div>
-
-        </div>
-
-
-        <!-- =====================================
-             ENTRANCE EXAMS
-        ====================================== -->
-
-        <div
-            class="step"
-            id="stepEntrance"
-        >
-
-            <div class="step-label">
-                Prijímačky
-            </div>
-
-            <h1>
-                Pripravuješ sa na
-                <span>prijímačky?</span>
-            </h1>
-
-            <p class="description">
-                Môžeš vybrať jednu alebo obe možnosti.
-            </p>
-
-
-            <div class="options">
-
-                <button
-                    class="option"
-                    onclick="toggleEntrance(
-                        'high_school',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Prijímačky na strednú
-                        </strong>
-
-                        <small>
-                            Prijímacie skúšky na SŠ
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-
-                <button
-                    class="option"
-                    onclick="toggleEntrance(
-                        'university',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Prijímačky na vysokú
-                        </strong>
-
-                        <small>
-                            Prijímacie skúšky na VŠ
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================
-             UNIVERSITY FIELD
-        ====================================== -->
-
-        <div
-            class="step"
-            id="stepUniversity"
-        >
-
-            <div class="step-label">
-                Vysoká škola
-            </div>
-
-            <h1>
-                Čo chceš <span>študovať?</span>
-            </h1>
-
-            <p class="description">
-                Vyber odbor, na ktorý sa pripravuješ.
-            </p>
-
-
-            <div class="options">
-
-                <button
-                    class="option"
-                    onclick="selectUniversity(
-                        'medicine',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Medicína
-                        </strong>
-
-                        <small>
-                            Lekárske odbory
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-
-                <button
-                    class="option"
-                    onclick="selectUniversity(
-                        'veterinary',
-                        this
-                    )"
-                >
-
-                    <div class="option-info">
-                        <strong>
-                            Veterina
-                        </strong>
-
-                        <small>
-                            Veterinárne lekárstvo
-                        </small>
-                    </div>
-
-                    <div class="check">
-                        ✓
-                    </div>
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================
-             SUCCESS
-        ====================================== -->
-
-        <div
-            class="step"
-            id="stepSuccess"
-        >
-
-            <div class="success">
-
-                <h1>
-                    Gratulujeme
-                </h1>
-
-                <p>
-                    Tvoj EduScroll pripravujeme.
-                </p>
-
-                <div class="loader"></div>
-
-                <p>
-                    Pripravujeme tvoj
-                    personalizovaný obsah...
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================
-             NAVIGATION
-        ====================================== -->
-
-        <div
-            class="bottom"
-            id="navigation"
-        >
-
-            <button
-                class="back"
-                onclick="goBack()"
-                id="backButton"
-            >
-                Späť
-            </button>
-
-            <button
-                class="next"
-                onclick="nextStep()"
-                id="nextButton"
-                disabled
-            >
-                Ďalej
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<script>
-
-    /* ==========================================
-       SUPABASE
-    ========================================== */
-
-    const SUPABASE_URL =
-        "https://oqolleianbsgwczjsuif.supabase.co";
-
-    const SUPABASE_KEY =
-        "sb_publishable_rjBo1Lk7o7fQXqiHIOmw1g_0JXmrwxz";
-
-    const supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-        );
-
-
-    /* ==========================================
-       DATA
-    ========================================== */
-
-    let currentStep = 1;
-
-    let selectedLanguage = null;
-
-    let selectedAreas = [];
-
-    let schoolType = null;
-
-    let grade = null;
-
-    let selectedHobbies = [];
-
-    let selectedSports = [];
-
-    let entranceExams = [];
-
-    let universityField = null;
-
-
-    const steps = [
-        "stepLanguage",
-        "stepStudy",
-        "stepSchool",
-        "stepGrade",
-        "stepHobby",
-        "stepSport",
-        "stepEntrance",
-        "stepUniversity",
-        "stepSuccess"
-    ];
-
-
-    /* ==========================================
-       SHOW STEP
-    ========================================== */
-
-    function showStep(id) {
-
-        document
-            .querySelectorAll(".step")
-            .forEach(step => {
-                step.classList.remove("active");
-            });
-
-
-        document
-            .getElementById(id)
-            .classList.add("active");
-
-
-        document
-            .getElementById("nextButton")
-            .disabled = false;
-
-
-        updateProgress();
-    }
-
-
-    function updateProgress() {
-
-        const progress =
-            Math.min(
-                (currentStep / 8) * 100,
-                100
-            );
-
-
-        document
-            .getElementById("progress")
-            .style.width =
-                progress + "%";
-    }
-
-
-    /* ==========================================
-       LANGUAGE
-    ========================================== */
-
-    function selectLanguage(
-        language,
-        button
-    ) {
-
-        selectedLanguage = language;
-
-
-        document
-            .querySelectorAll(
-                "#stepLanguage .option"
-            )
-            .forEach(option => {
-                option.classList.remove(
-                    "selected"
-                );
-            });
-
-
-        button.classList.add("selected");
-
-
-        setTimeout(() => {
-
-            currentStep = 2;
-
-            showStep("stepStudy");
-
-        }, 250);
-    }
-
-
-    /* ==========================================
-       STUDY AREAS
-    ========================================== */
-
-    function toggleArea(
-        area,
-        button
-    ) {
-
-        const index =
-            selectedAreas.indexOf(area);
-
-
-        if (index === -1) {
-
-            selectedAreas.push(area);
-
-            button.classList.add(
-                "selected"
-            );
-
-        } else {
-
-            selectedAreas.splice(
-                index,
-                1
-            );
-
-            button.classList.remove(
-                "selected"
-            );
-        }
-
-
-        updateNextButton();
-    }
-
-
-    /* ==========================================
-       SCHOOL
-    ========================================== */
-
-    function selectSchool(
-        type,
-        button
-    ) {
-
-        schoolType = type;
-
-
-        document
-            .querySelectorAll(
-                "#stepSchool .option"
-            )
-            .forEach(option => {
-                option.classList.remove(
-                    "selected"
-                );
-            });
-
-
-        button.classList.add("selected");
-
-
-        updateNextButton();
-    }
-
-
-    /* ==========================================
-       GRADE
-    ========================================== */
-
-    function createGrades() {
-
-        const container =
-            document.getElementById(
-                "gradeOptions"
-            );
-
-
-        container.innerHTML = "";
-
-
-        let grades = [];
-
-
-        if (schoolType === "ZS") {
-
-            grades = [
-                1,2,3,4,5,6,7,8,9
-            ];
-
-        } else if (schoolType === "SS") {
-
-            grades = [
-                1,2,3,4
-            ];
-
-        } else {
-
-            grades = [
-                1,2,3,4,5,6
-            ];
-        }
-
-
-        grades.forEach(number => {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-
-            button.className =
-                "option";
-
-
-            button.innerHTML = `
-
-                <div class="option-info">
-
-                    <strong>
-                        ${number}. ročník
-                    </strong>
-
-                </div>
-
-                <div class="check">
-                    ✓
-                </div>
-
-            `;
-
-
-            button.onclick = () => {
-
-                grade = number;
-
-
-                document
-                    .querySelectorAll(
-                        "#gradeOptions .option"
-                    )
-                    .forEach(option => {
-                        option.classList.remove(
-                            "selected"
-                        );
-                    });
-
-
-                button.classList.add(
-                    "selected"
-                );
-
-
-                updateNextButton();
-            };
-
-
-            container.appendChild(
-                button
-            );
-
-        });
-    }
-
-
-    /* ==========================================
-       HOBBIES
-    ========================================== */
-
-    const hobbies = [
-
-        "Programovanie",
-        "Hra na gitaru",
-        "Hra na ukulele",
-        "Spev",
-        "Kreslenie",
-        "Fotografovanie",
-        "Strih videa",
-        "Písanie",
-        "Čítanie",
-        "Varenie",
-        "Pečenie",
-        "Šach",
-        "Robotika",
-        "Tvorba hudby",
-        "Grafický dizajn",
-        "3D modelovanie",
-        "Jazyky",
-        "Hranie hier",
-        "Tanec",
-        "Divadlo"
-
-    ];
-
-
-    function createHobbies() {
-
-        const container =
-            document.getElementById(
-                "hobbyOptions"
-            );
-
-
-        container.innerHTML = "";
-
-
-        hobbies.forEach(hobby => {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-
-            button.className =
-                "multi-option";
-
-
-            button.innerHTML = `
-
-                <span>
-                    ${hobby}
-                </span>
-
-                <span>
-                    ✓
-                </span>
-
-            `;
-
-
-            button.onclick = () => {
-
-                const index =
-                    selectedHobbies.indexOf(
-                        hobby
-                    );
-
-
-                if (index === -1) {
-
-                    selectedHobbies.push(
-                        hobby
-                    );
-
-                    button.classList.add(
-                        "selected"
-                    );
-
-                } else {
-
-                    selectedHobbies.splice(
-                        index,
-                        1
-                    );
-
-                    button.classList.remove(
-                        "selected"
-                    );
-                }
-
-
-                updateNextButton();
-            };
-
-
-            container.appendChild(
-                button
-            );
-
-        });
-    }
-
-
-    /* ==========================================
-       SPORTS
-    ========================================== */
-
-    const sports = [
-
-        "Futbal",
-        "Futsal",
-        "Florbal",
-        "Volejbal",
-        "Basketbal",
-        "Hádzaná",
-        "Ragby",
-        "Baseball",
-        "Softball",
-        "Ľadový hokej",
-        "Vodné pólo",
-
-        "Tenis",
-        "Stolný tenis",
-        "Bedminton",
-        "Squash",
-        "Padel",
-
-        "Beh",
-        "Šprint",
-        "Skok do diaľky",
-        "Skok do výšky",
-
-        "Plávanie",
-        "Potápanie",
-        "Veslovanie",
-        "Kajak",
-        "Kanoistika",
-        "Surfovanie",
-
-        "Lyžovanie",
-        "Snowboarding",
-        "Bežecké lyžovanie",
-        "Krasokorčuľovanie",
-
-        "Cyklistika",
-        "Horská cyklistika",
-        "BMX",
-
-        "Box",
-        "Kickbox",
-        "Muay Thai",
-        "MMA",
-        "Karate",
-        "Judo",
-        "Taekwondo",
-        "Brazilské jiu-jitsu",
-        "Jiu-jitsu",
-        "Aikido",
-        "Krav Maga",
-        "Zápasenie",
-        "Sambo",
-        "Kendo",
-        "Kung Fu",
-        "Capoeira",
-
-        "Fitness",
-        "Kulturistika",
-        "CrossFit",
-        "Kalistenika",
-        "Vzpieranie",
-        "Powerlifting",
-        "Joga",
-        "Pilates",
-
-        "Lezenie",
-        "Športové lezenie",
-        "Lukostreľba",
-        "Golf",
-        "Skateboarding",
-        "Kolieskové korčule",
-        "Gymnastika"
-
-    ];
-
-
-    function createSports() {
-
-        const container =
-            document.getElementById(
-                "sportOptions"
-            );
-
-
-        container.innerHTML = "";
-
-
-        sports.forEach(sport => {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-
-            button.className =
-                "multi-option";
-
-
-            button.innerHTML = `
-
-                <span>
-                    ${sport}
-                </span>
-
-                <span>
-                    ✓
-                </span>
-
-            `;
-
-
-            button.onclick = () => {
-
-                const index =
-                    selectedSports.indexOf(
-                        sport
-                    );
-
-
-                if (index === -1) {
-
-                    selectedSports.push(
-                        sport
-                    );
-
-                    button.classList.add(
-                        "selected"
-                    );
-
-                } else {
-
-                    selectedSports.splice(
-                        index,
-                        1
-                    );
-
-                    button.classList.remove(
-                        "selected"
-                    );
-                }
-
-
-                updateNextButton();
-            };
-
-
-            container.appendChild(
-                button
-            );
-
-        });
-    }
-
-
-    /* ==========================================
-       ENTRANCE EXAMS
-    ========================================== */
-
-    function toggleEntrance(
-        type,
-        button
-    ) {
-
-        const index =
-            entranceExams.indexOf(type);
-
-
-        if (index === -1) {
-
-            entranceExams.push(type);
-
-            button.classList.add(
-                "selected"
-            );
-
-        } else {
-
-            entranceExams.splice(
-                index,
-                1
-            );
-
-            button.classList.remove(
-                "selected"
-            );
-        }
-
-
-        updateNextButton();
-    }
-
-
-    /* ==========================================
-       UNIVERSITY
-    ========================================== */
-
-    function selectUniversity(
-        field,
-        button
-    ) {
-
-        universityField = field;
-
-
-        document
-            .querySelectorAll(
-                "#stepUniversity .option"
-            )
-            .forEach(option => {
-                option.classList.remove(
-                    "selected"
-                );
-            });
-
-
-        button.classList.add(
-            "selected"
-        );
-
-
-        updateNextButton();
-    }
-
-
-    /* ==========================================
-       NEXT BUTTON
-    ========================================== */
-
-    function updateNextButton() {
-
-        let valid = false;
-
-
-        if (currentStep === 2) {
-
-            valid =
-                selectedAreas.length > 0;
-
-        }
-
-        else if (currentStep === 3) {
-
-            valid =
-                schoolType !== null;
-
-        }
-
-        else if (currentStep === 4) {
-
-            valid =
-                grade !== null;
-
-        }
-
-        else if (currentStep === 5) {
-
-            valid =
-                !selectedAreas.includes(
-                    "hobby"
-                ) ||
-                selectedHobbies.length > 0;
-
-        }
-
-        else if (currentStep === 6) {
-
-            valid =
-                !selectedAreas.includes(
-                    "sport"
-                ) ||
-                selectedSports.length > 0;
-
-        }
-
-        else if (currentStep === 7) {
-
-            valid = true;
-
-        }
-
-        else if (currentStep === 8) {
-
-            valid =
-                universityField !== null;
-
-        }
-
-        else {
-
-            valid = false;
+            font-size: 10px;
 
         }
 
 
-        document
-            .getElementById("nextButton")
-            .disabled = !valid;
-    }
+        .admission-option.selected
+        .admission-check {
+
+            background:
+                #1478ff;
+
+            border-color:
+                #1478ff;
+
+            color: white;
+
+        }
 
 
-    /* ==========================================
-       NEXT
-    ========================================== */
+        .skip-button {
 
-    async function nextStep() {
+            width: 100%;
 
-        if (currentStep === 2) {
+            height: 40px;
 
-            if (
-                selectedAreas.includes(
-                    "school"
-                )
-            ) {
+            margin-top: 9px;
 
-                currentStep = 3;
+            border: none;
 
-                showStep(
-                    "stepSchool"
-                );
+            background: transparent;
 
-            } else {
+            color: #687588;
 
-                currentStep = 5;
+            cursor: pointer;
 
-                showStep(
-                    "stepHobby"
-                );
-            }
+            font-size: 10px;
 
-            return;
         }
 
 
-        if (currentStep === 3) {
+        .skip-button:hover {
 
-            createGrades();
-
-            currentStep = 4;
-
-            showStep(
-                "stepGrade"
-            );
-
-            return;
-        }
-
-
-        if (currentStep === 4) {
-
-            if (
-                selectedAreas.includes(
-                    "hobby"
-                )
-            ) {
-
-                createHobbies();
-
-                currentStep = 5;
-
-                showStep(
-                    "stepHobby"
-                );
-
-            } else if (
-                selectedAreas.includes(
-                    "sport"
-                )
-            ) {
-
-                createSports();
-
-                currentStep = 6;
-
-                showStep(
-                    "stepSport"
-                );
-
-            } else {
-
-                currentStep = 7;
-
-                showStep(
-                    "stepEntrance"
-                );
-            }
-
-            return;
-        }
-
-
-        if (currentStep === 5) {
-
-            if (
-                selectedAreas.includes(
-                    "sport"
-                )
-            ) {
-
-                createSports();
-
-                currentStep = 6;
-
-                showStep(
-                    "stepSport"
-                );
-
-            } else {
-
-                currentStep = 7;
-
-                showStep(
-                    "stepEntrance"
-                );
-            }
-
-            return;
-        }
-
-
-        if (currentStep === 6) {
-
-            currentStep = 7;
-
-            showStep(
-                "stepEntrance"
-            );
-
-            return;
-        }
-
-
-        if (currentStep === 7) {
-
-            if (
-                entranceExams.includes(
-                    "university"
-                )
-            ) {
-
-                currentStep = 8;
-
-                showStep(
-                    "stepUniversity"
-                );
-
-            } else {
-
-                await finishOnboarding();
-            }
-
-            return;
-        }
-
-
-        if (currentStep === 8) {
-
-            await finishOnboarding();
+            color: white;
 
         }
-    }
 
+    `;
 
-    /* ==========================================
-       SAVE
-    ========================================== */
 
-    async function finishOnboarding() {
+    document.head.appendChild(
+        style
+    );
 
-        const {
-            data: {
-                user
-            }
-        } =
-            await supabaseClient
-                .auth
-                .getUser();
-
-
-        if (!user) {
-
-            window.location.href =
-                "login.html";
-
-            return;
-        }
-
-
-        const {
-            error
-        } =
-            await supabaseClient
-                .from("profiles")
-                .update({
-
-                    language:
-                        selectedLanguage,
-
-                    study_school:
-                        selectedAreas.includes(
-                            "school"
-                        ),
-
-                    study_hobby:
-                        selectedAreas.includes(
-                            "hobby"
-                        ),
-
-                    study_sport:
-                        selectedAreas.includes(
-                            "sport"
-                        ),
-
-                    school_type:
-                        schoolType,
-
-                    grade:
-                        grade,
-
-                    selected_hobbies:
-                        selectedHobbies,
-
-                    selected_sports:
-                        selectedSports,
-
-                    entrance_exams:
-                        entranceExams,
-
-                    university_field:
-                        universityField,
-
-                    updated_at:
-                        new Date().toISOString()
-
-                })
-                .eq(
-                    "id",
-                    user.id
-                );
-
-
-        if (error) {
-
-            console.error(error);
-
-            alert(
-                "Nepodarilo sa uložiť tvoje nastavenia."
-            );
-
-            return;
-        }
-
-
-        currentStep = 9;
-
-        showStep(
-            "stepSuccess"
-        );
-
-
-        document
-            .getElementById(
-                "navigation"
-            )
-            .style.display =
-                "none";
-
-
-        setTimeout(() => {
-
-            window.location.href =
-                "home.html";
-
-        }, 5000);
-    }
-
-
-    /* ==========================================
-       BACK
-    ========================================== */
-
-    function goBack() {
-
-        if (currentStep <= 2) {
-            return;
-        }
-
-
-        if (currentStep === 3) {
-
-            currentStep = 2;
-
-            showStep(
-                "stepStudy"
-            );
-
-            return;
-        }
-
-
-        if (currentStep === 4) {
-
-            currentStep = 3;
-
-            showStep(
-                "stepSchool"
-            );
-
-            return;
-        }
-
-
-        if (currentStep === 5) {
-
-            if (
-                selectedAreas.includes(
-                    "school"
-                )
-            ) {
-
-                currentStep = 4;
-
-                showStep(
-                    "stepGrade"
-                );
-
-            } else {
-
-                currentStep = 2;
-
-                showStep(
-                    "stepStudy"
-                );
-            }
-
-            return;
-        }
-
-
-        if (currentStep === 6) {
-
-            currentStep = 5;
-
-            showStep(
-                "stepHobby"
-            );
-
-            return;
-        }
-
-
-        if (currentStep === 7) {
-
-            if (
-                selectedAreas.includes(
-                    "sport"
-                )
-            ) {
-
-                currentStep = 6;
-
-                showStep(
-                    "stepSport"
-                );
-
-            } else if (
-                selectedAreas.includes(
-                    "hobby"
-                )
-            ) {
-
-                currentStep = 5;
-
-                showStep(
-                    "stepHobby"
-                );
-
-            } else if (
-                selectedAreas.includes(
-                    "school"
-                )
-            ) {
-
-                currentStep = 4;
-
-                showStep(
-                    "stepGrade"
-                );
-            }
-
-            return;
-        }
-
-
-        if (currentStep === 8) {
-
-            currentStep = 7;
-
-            showStep(
-                "stepEntrance"
-            );
-        }
-    }
-
-
-    /* ==========================================
-       INITIALIZATION
-    ========================================== */
-
-    updateProgress();
+}
 
 </script>
 
+
+
+/* =========================================
+   STYLES
+========================================= */
+
+
+function addSchoolStyles() {
+
+    if (
+        document.getElementById(
+            "schoolStyles"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const style =
+        document.createElement(
+            "style"
+        );
+
+
+    style.id =
+        "schoolStyles";
+
+
+    style.innerHTML = `
+
+        .school-types {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+            margin-top: 25px;
+
+        }
+
+
+        .school-type {
+
+            width: 100%;
+
+            min-height: 72px;
+
+            padding: 15px 17px;
+
+            display: flex;
+
+            align-items: center;
+
+            text-align: left;
+
+            border-radius: 15px;
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            background:
+                rgba(255,255,255,.025);
+
+            color: white;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+
+        }
+
+
+        .school-type:hover {
+
+            border-color:
+                rgba(20,120,255,.5);
+
+            background:
+                rgba(20,120,255,.06);
+
+        }
+
+
+        .school-type.selected {
+
+            background:
+                rgba(20,120,255,.10);
+
+            border-color:
+                #1478ff;
+
+        }
+
+
+        .school-info {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 5px;
+
+        }
+
+
+        .school-info strong {
+
+            font-size: 14px;
+
+        }
+
+
+        .school-info small {
+
+            color: #687588;
+
+            font-size: 10px;
+
+        }
+
+
+        .school-check {
+
+            margin-left: auto;
+
+            width: 23px;
+
+            height: 23px;
+
+            border-radius: 50%;
+
+            border:
+                1px solid rgba(255,255,255,.12);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: transparent;
+
+            font-size: 11px;
+
+        }
+
+
+        .school-type.selected
+        .school-check {
+
+            background:
+                #1478ff;
+
+            border-color:
+                #1478ff;
+
+            color: white;
+
+        }
+
+
+        .section-title {
+
+            margin-top: 30px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+        }
+
+
+        .section-description {
+
+            color: #687588;
+
+            font-size: 11px;
+
+            margin-top: 5px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .exam-options {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+
+        }
+
+
+        .exam-option {
+
+            width: 100%;
+
+            padding: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            text-align: left;
+
+            border-radius: 12px;
+
+            border:
+                1px solid rgba(255,255,255,.07);
+
+            background:
+                rgba(255,255,255,.02);
+
+            color: white;
+
+            cursor: pointer;
+
+        }
+
+
+        .exam-option.selected {
+
+            border-color:
+                #1478ff;
+
+            background:
+                rgba(20,120,255,.08);
+
+        }
+
+
+        .exam-info {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 4px;
+
+        }
+
+
+        .exam-info strong {
+
+            font-size: 12px;
+
+        }
+
+
+        .exam-info small {
+
+            color: #687588;
+
+            font-size: 9px;
+
+        }
+
+
+        .exam-check {
+
+            margin-left: auto;
+
+            width: 21px;
+
+            height: 21px;
+
+            border-radius: 50%;
+
+            border:
+                1px solid rgba(255,255,255,.1);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: transparent;
+
+            font-size: 10px;
+
+        }
+
+
+        .exam-option.selected
+        .exam-check {
+
+            background:
+                #1478ff;
+
+            border-color:
+                #1478ff;
+
+            color: white;
+
+        }
+
+
+        .school-error {
+
+            display: none;
+
+            color: #ff7777;
+
+            text-align: center;
+
+            font-size: 11px;
+
+            margin-top: 12px;
+
+        }
+
+
+        .school-error.show {
+
+            display: block;
+
+        }
+
+    `;
+
+
+    document.head.appendChild(
+        style
+    );
+
+}
+
+</script>
+
+    /*
+        Example:
+
+        ["school"]
+
+        ["school", "hobby"]
+
+        ["school", "hobby", "sport"]
+    */
+
+
+    console.log(
+        "Selected:",
+        window.selectedStudyTypes
+    );
+
+
+    /*
+        For now we'll show a temporary
+        confirmation.
+
+        In the next part we will use this
+        selection to decide which screen
+        appears next.
+    */
+
+
+    document.querySelector(
+        ".card"
+    ).innerHTML = `
+
+        <div class="step-number">
+            Step 2 complete
+        </div>
+
+        <h1>
+            Výber uložený
+        </h1>
+
+        <p class="description">
+            Vybral/a si:
+        </p>
+
+        <div style="
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            margin-top:20px;
+        ">
+
+            ${
+                window.selectedStudyTypes
+                .map(type => {
+
+                    let name = "";
+
+                    if (type === "school")
+                        name = "Škola";
+
+                    if (type === "hobby")
+                        name = "Hobby";
+
+                    if (type === "sport")
+                        name = "Šport";
+
+                    return `
+                        <div style="
+                            padding:14px;
+                            border-radius:12px;
+                            background:rgba(20,120,255,.07);
+                            border:1px solid rgba(20,120,255,.12);
+                            font-size:12px;
+                        ">
+                            ${name}
+                        </div>
+                    `;
+
+                })
+                .join("")
+            }
+
+        </div>
+
+    `;
+
+}
+
+</script>
+
+
+
+/* =========================================
+   ADD LANGUAGE
+========================================= */
+
+
+function openLanguageModal() {
+
+    languageModal.classList.add(
+        "show"
+    );
+
+    document
+        .getElementById(
+            "requestedLanguage"
+        )
+        .focus();
+
+}
+
+
+
+function closeLanguageModal() {
+
+    languageModal.classList.remove(
+        "show"
+    );
+
+}
+
+
+
+async function submitLanguageRequest() {
+
+    const language =
+        document
+            .getElementById(
+                "requestedLanguage"
+            )
+            .value
+            .trim();
+
+
+    if (!language) {
+
+        alert(
+            "Please enter a language."
+        );
+
+        return;
+
+    }
+
+
+    /*
+        For now this is only a demo.
+
+        Later we'll connect this to an
+        admin_requests table in Supabase.
+    */
+
+
+    alert(
+        "Thank you! Your language request has been sent."
+    );
+
+
+    document
+        .getElementById(
+            "requestedLanguage"
+        )
+        .value = "";
+
+
+    closeLanguageModal();
+
+}
+
+
+
+/* =========================================
+   START
+========================================= */
+
+
+checkUser();
+
+
+</script>
+
+
 </body>
+
 </html>
