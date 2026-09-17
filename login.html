@@ -1,548 +1,1803 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduScroll</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#080812"
+    >
+
+    <title>EduScroll — Login</title>
+
+
+    <!-- =========================================
+         SUPABASE JS
+    ========================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+
+        html,
         body {
+            min-height: 100%;
+        }
+
+
+        body {
+
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #09090B;
-            color: white;
-            font-family: Arial, sans-serif;
+            min-height: 100dvh;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            color: #ffffff;
+
+            background:
+
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(108, 99, 255, .20),
+                    transparent 32%
+                ),
+
+                radial-gradient(
+                    circle at 85% 80%,
+                    rgba(75, 65, 190, .16),
+                    transparent 30%
+                ),
+
+                #080812;
+
+            overflow-x: hidden;
         }
 
-        .container {
-            width: 100%;
-            max-width: 430px;
-            padding: 20px;
+
+        button,
+        input {
+            font: inherit;
         }
 
-        .logo {
-            text-align: center;
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            background: linear-gradient(135deg, #8B5CF6, #EC4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
 
-        .card {
-            background: #111116;
-            border: 1px solid #24242C;
-            border-radius: 20px;
-            padding: 30px;
-        }
-
-        .switch {
-            display: flex;
-            background: #09090B;
-            padding: 4px;
-            border-radius: 11px;
-            margin-bottom: 28px;
-        }
-
-        .switch button {
-            flex: 1;
-            border: 0;
-            padding: 12px;
-            border-radius: 8px;
-            background: transparent;
-            color: #A1A1AA;
+        button {
             cursor: pointer;
         }
 
-        .switch button.active {
-            background: linear-gradient(135deg, #8B5CF6, #EC4899);
-            color: white;
+
+        /* =========================================
+           BACKGROUND
+        ========================================== */
+
+        .background {
+
+            position: fixed;
+            inset: 0;
+
+            pointer-events: none;
+
+            overflow: hidden;
         }
+
+
+        .orb {
+
+            position: absolute;
+
+            border-radius: 50%;
+
+            filter: blur(90px);
+
+            opacity: .25;
+
+            animation:
+                floatingOrb
+                8s
+                ease-in-out
+                infinite;
+        }
+
+
+        .orb.one {
+
+            width: 280px;
+            height: 280px;
+
+            top: -100px;
+            left: -80px;
+
+            background: #655cff;
+        }
+
+
+        .orb.two {
+
+            width: 350px;
+            height: 350px;
+
+            right: -130px;
+            bottom: -140px;
+
+            background: #4b42d0;
+
+            animation-delay: -3s;
+        }
+
+
+        .orb.three {
+
+            width: 160px;
+            height: 160px;
+
+            top: 40%;
+            left: 48%;
+
+            background: #8178ff;
+
+            opacity: .08;
+
+            animation-delay: -5s;
+        }
+
+
+        @keyframes floatingOrb {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(25px, -20px);
+            }
+
+        }
+
+
+        /* =========================================
+           PAGE
+        ========================================== */
+
+        .page {
+
+            position: relative;
+            z-index: 1;
+
+            min-height: 100vh;
+            min-height: 100dvh;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 30px 18px;
+        }
+
+
+        .auth-wrapper {
+
+            width: 100%;
+
+            max-width: 460px;
+        }
+
+
+        /* =========================================
+           BRAND
+        ========================================== */
+
+        .brand {
+
+            text-align: center;
+
+            margin-bottom: 26px;
+
+            animation:
+                fadeUp
+                .7s
+                ease
+                forwards;
+        }
+
+
+        .brand-icon {
+
+            width: 52px;
+            height: 52px;
+
+            margin:
+                0 auto 13px;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 16px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c73ff,
+                    #5549df
+                );
+
+            box-shadow:
+                0 15px 40px
+                rgba(91, 80, 255, .30);
+
+            font-size: 27px;
+            font-weight: 800;
+
+            transform: rotate(-4deg);
+        }
+
+
+        .brand-icon span {
+            transform: rotate(4deg);
+        }
+
+
+        .brand-name {
+
+            font-size: 30px;
+
+            font-weight: 800;
+
+            letter-spacing: -1.5px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff,
+                    #aaa4ff
+                );
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        .brand-subtitle {
+
+            margin-top: 6px;
+
+            color:
+                rgba(255,255,255,.48);
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           CARD
+        ========================================== */
+
+        .auth-card {
+
+            width: 100%;
+
+            padding: 28px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.09);
+
+            border-radius: 26px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.075),
+                    rgba(255,255,255,.035)
+                );
+
+            box-shadow:
+
+                0 30px 80px
+                rgba(0,0,0,.40),
+
+                inset
+                0 1px 0
+                rgba(255,255,255,.05);
+
+            backdrop-filter:
+                blur(25px);
+
+            -webkit-backdrop-filter:
+                blur(25px);
+
+            animation:
+                cardEntrance
+                .8s
+                cubic-bezier(.16,1,.3,1)
+                forwards;
+        }
+
+
+        @keyframes cardEntrance {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(25px)
+                    scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+        }
+
+
+        /* =========================================
+           TABS
+        ========================================== */
+
+        .tabs {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            padding: 4px;
+
+            margin-bottom: 26px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(0,0,0,.20);
+        }
+
+
+        .tab {
+
+            border: none;
+
+            padding: 11px 10px;
+
+            border-radius: 10px;
+
+            color:
+                rgba(255,255,255,.45);
+
+            background: transparent;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition:
+                .2s;
+        }
+
+
+        .tab.active {
+
+            color: #fff;
+
+            background:
+                rgba(255,255,255,.08);
+
+            box-shadow:
+                0 4px 14px
+                rgba(0,0,0,.15);
+        }
+
+
+        /* =========================================
+           FORMS
+        ========================================== */
 
         .form {
             display: none;
         }
 
+
         .form.active {
+
             display: block;
+
+            animation:
+                formFade
+                .3s
+                ease;
         }
 
-        h1 {
-            font-size: 27px;
-            margin-bottom: 8px;
+
+        @keyframes formFade {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateX(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateX(0);
+            }
+
         }
 
-        .subtitle {
-            color: #A1A1AA;
-            font-size: 14px;
-            margin-bottom: 25px;
+
+        .form-title {
+
+            font-size: 24px;
+
+            font-weight: 750;
+
+            letter-spacing: -.7px;
         }
+
+
+        .form-description {
+
+            margin-top: 6px;
+            margin-bottom: 22px;
+
+            color:
+                rgba(255,255,255,.45);
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
 
         .field {
-            margin-bottom: 18px;
+
+            margin-bottom: 16px;
         }
 
-        label {
+
+        .field label {
+
             display: block;
-            color: #D4D4D8;
-            font-size: 13px;
-            margin-bottom: 8px;
+
+            margin-bottom: 7px;
+
+            color:
+                rgba(255,255,255,.70);
+
+            font-size: 12px;
+
+            font-weight: 600;
         }
 
-        input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid #292931;
-            background: #09090B;
-            color: white;
-            outline: none;
-            font-size: 14px;
-        }
 
-        input:focus {
-            border-color: #8B5CF6;
-        }
+        .input-wrapper {
 
-        .password {
             position: relative;
         }
 
-        .password input {
-            padding-right: 55px;
+
+        .input-icon {
+
+            position: absolute;
+
+            top: 50%;
+            left: 14px;
+
+            transform:
+                translateY(-50%);
+
+            color:
+                rgba(255,255,255,.35);
+
+            font-size: 15px;
+
+            pointer-events: none;
         }
 
-        .show {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: 0;
-            color: #A78BFA;
-            cursor: pointer;
-            font-size: 12px;
+
+        .field input {
+
+            width: 100%;
+
+            height: 48px;
+
+            padding:
+                0 15px 0 42px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            border-radius: 13px;
+
+            outline: none;
+
+            color: #fff;
+
+            background:
+                rgba(0,0,0,.18);
+
+            transition: .2s;
         }
+
+
+        .field input::placeholder {
+
+            color:
+                rgba(255,255,255,.25);
+        }
+
+
+        .field input:focus {
+
+            border-color:
+                rgba(117,108,255,.75);
+
+            background:
+                rgba(0,0,0,.25);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(101,92,255,.10);
+        }
+
+
+        .password-toggle {
+
+            position: absolute;
+
+            top: 50%;
+            right: 13px;
+
+            transform:
+                translateY(-50%);
+
+            border: none;
+
+            color:
+                rgba(255,255,255,.35);
+
+            background: transparent;
+
+            font-size: 15px;
+        }
+
 
         .forgot {
-            text-align: right;
-            margin-top: -7px;
-            margin-bottom: 18px;
-        }
 
-        .forgot button {
-            background: none;
-            border: 0;
-            color: #A78BFA;
-            cursor: pointer;
+            display: block;
+
+            margin:
+                -4px 0 18px;
+
+            text-align: right;
+
+            border: none;
+
+            color: #8e87ff;
+
+            background: transparent;
+
             font-size: 12px;
         }
 
-        .main-button {
+
+        /* =========================================
+           BUTTON
+        ========================================== */
+
+        .primary-button {
+
             width: 100%;
-            padding: 14px;
-            border: 0;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #8B5CF6, #EC4899);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
+
+            height: 49px;
+
+            border: none;
+
+            border-radius: 13px;
+
+            color: #fff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #746bff,
+                    #5549df
+                );
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 12px 25px
+                rgba(87,76,230,.22);
+
+            transition: .2s;
         }
 
-        .main-button:disabled {
-            opacity: .6;
+
+        .primary-button:hover {
+
+            transform:
+                translateY(-1px);
+
+            filter:
+                brightness(1.08);
         }
 
-        .message {
-            min-height: 20px;
-            margin-top: 15px;
-            text-align: center;
+
+        .primary-button:disabled {
+
+            opacity: .55;
+
+            cursor:
+                not-allowed;
+
+            transform: none;
+        }
+
+
+        /* =========================================
+           DIVIDER
+        ========================================== */
+
+        .divider {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin: 22px 0;
+        }
+
+
+        .divider::before,
+        .divider::after {
+
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background:
+                rgba(255,255,255,.08);
+        }
+
+
+        .divider span {
+
+            color:
+                rgba(255,255,255,.30);
+
+            font-size: 11px;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================================
+           GOOGLE
+        ========================================== */
+
+        .google-button {
+
+            width: 100%;
+
+            height: 48px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 10px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.10);
+
+            border-radius: 13px;
+
+            color: #fff;
+
+            background:
+                rgba(255,255,255,.045);
+
             font-size: 13px;
+
+            font-weight: 600;
+
+            transition: .2s;
         }
 
-        .error {
-            color: #F87171;
+
+        .google-button:hover {
+
+            background:
+                rgba(255,255,255,.08);
+
+            transform:
+                translateY(-1px);
         }
 
-        .success {
-            color: #4ADE80;
+
+        .google-icon {
+
+            width: 19px;
+            height: 19px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            background: #fff;
+
+            color: #4285f4;
+
+            font-size: 12px;
+
+            font-weight: 800;
         }
+
+
+        /* =========================================
+           STATUS
+        ========================================== */
+
+        .status {
+
+            display: none;
+
+            margin-bottom: 17px;
+
+            padding: 11px 13px;
+
+            border-radius: 11px;
+
+            font-size: 12px;
+
+            line-height: 1.45;
+        }
+
+
+        .status.show {
+            display: block;
+        }
+
+
+        .status.error {
+
+            border:
+                1px solid
+                rgba(255,90,90,.20);
+
+            color: #ffaaaa;
+
+            background:
+                rgba(255,70,70,.08);
+        }
+
+
+        .status.success {
+
+            border:
+                1px solid
+                rgba(80,220,150,.20);
+
+            color: #9ceac2;
+
+            background:
+                rgba(70,220,140,.08);
+        }
+
+
+        /* =========================================
+           TERMS
+        ========================================== */
+
+        .terms {
+
+            margin-top: 22px;
+
+            color:
+                rgba(255,255,255,.30);
+
+            text-align: center;
+
+            font-size: 10px;
+
+            line-height: 1.6;
+        }
+
+
+        .terms a {
+
+            color:
+                rgba(155,149,255,.75);
+
+            text-decoration: none;
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================== */
+
+        @media (max-width: 500px) {
+
+            .page {
+
+                align-items:
+                    flex-start;
+
+                padding:
+                    30px 18px;
+            }
+
+
+            .auth-card {
+
+                padding:
+                    22px 18px;
+
+                border-radius: 22px;
+            }
+
+
+            .brand {
+
+                margin-bottom: 20px;
+            }
+
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+
+                animation-duration:
+                    .01ms !important;
+
+                animation-iteration-count:
+                    1 !important;
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-<div class="container">
 
-    <div class="logo">EduScroll</div>
+    <div class="background">
 
-    <div class="card">
-
-        <div class="switch">
-            <button id="loginTab" class="active" onclick="showForm('login')">
-                Log in
-            </button>
-
-            <button id="signupTab" onclick="showForm('signup')">
-                Sign up
-            </button>
-        </div>
-
-
-        <!-- LOGIN -->
-
-        <form id="loginForm" class="form active">
-
-            <h1>Welcome back</h1>
-            <p class="subtitle">Log in to continue learning.</p>
-
-            <div class="field">
-                <label>Email</label>
-                <input
-                    id="loginEmail"
-                    type="email"
-                    placeholder="you@example.com"
-                    required
-                >
-            </div>
-
-            <div class="field">
-                <label>Password</label>
-
-                <div class="password">
-                    <input
-                        id="loginPassword"
-                        type="password"
-                        placeholder="Your password"
-                        required
-                    >
-
-                    <button
-                        type="button"
-                        class="show"
-                        onclick="togglePassword('loginPassword', this)"
-                    >
-                        Show
-                    </button>
-                </div>
-            </div>
-
-            <div class="forgot">
-                <button type="button" onclick="forgotPassword()">
-                    Forgot password?
-                </button>
-            </div>
-
-            <button class="main-button" type="submit">
-                Log in
-            </button>
-
-            <div id="loginMessage" class="message"></div>
-
-        </form>
-
-
-        <!-- SIGN UP -->
-
-        <form id="signupForm" class="form">
-
-            <h1>Create account</h1>
-            <p class="subtitle">Start your learning journey.</p>
-
-            <div class="field">
-                <label>Email</label>
-                <input
-                    id="signupEmail"
-                    type="email"
-                    placeholder="you@example.com"
-                    required
-                >
-            </div>
-
-            <div class="field">
-                <label>Password</label>
-
-                <div class="password">
-                    <input
-                        id="signupPassword"
-                        type="password"
-                        placeholder="Create a password"
-                        required
-                    >
-
-                    <button
-                        type="button"
-                        class="show"
-                        onclick="togglePassword('signupPassword', this)"
-                    >
-                        Show
-                    </button>
-                </div>
-            </div>
-
-            <div class="field">
-                <label>Confirm password</label>
-
-                <div class="password">
-                    <input
-                        id="signupConfirm"
-                        type="password"
-                        placeholder="Repeat your password"
-                        required
-                    >
-
-                    <button
-                        type="button"
-                        class="show"
-                        onclick="togglePassword('signupConfirm', this)"
-                    >
-                        Show
-                    </button>
-                </div>
-            </div>
-
-            <button class="main-button" type="submit">
-                Create account
-            </button>
-
-            <div id="signupMessage" class="message"></div>
-
-        </form>
+        <div class="orb one"></div>
+        <div class="orb two"></div>
+        <div class="orb three"></div>
 
     </div>
-</div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <main class="page">
 
-<script>
-
-const SUPABASE_URL =
-    "https://hazdrvuxoqbqdxmdjhru.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_Sog2nQJ6lpK6rbq56IN5VA_bsocB0pj";
-
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
+        <div class="auth-wrapper">
 
 
-/* LOGIN / SIGN UP */
+            <div class="brand">
 
-function showForm(type) {
+                <div class="brand-icon">
+                    <span>✦</span>
+                </div>
 
-    document.getElementById("loginForm")
-        .classList.toggle("active", type === "login");
+                <div class="brand-name">
+                    EduScroll
+                </div>
 
-    document.getElementById("signupForm")
-        .classList.toggle("active", type === "signup");
+                <div class="brand-subtitle">
+                    Learn. Explore. Connect.
+                </div>
 
-    document.getElementById("loginTab")
-        .classList.toggle("active", type === "login");
-
-    document.getElementById("signupTab")
-        .classList.toggle("active", type === "signup");
-
-    document.getElementById("loginMessage").textContent = "";
-    document.getElementById("signupMessage").textContent = "";
-}
+            </div>
 
 
-/* LOGIN */
+            <section class="auth-card">
 
-document.getElementById("loginForm").addEventListener(
-    "submit",
-    async function(e) {
 
-        e.preventDefault();
+                <div class="tabs">
 
-        const email =
-            document.getElementById("loginEmail").value.trim();
+                    <button
+                        class="tab active"
+                        id="signInTab"
+                        type="button"
+                    >
+                        Sign In
+                    </button>
 
-        const password =
-            document.getElementById("loginPassword").value;
 
-        const message =
-            document.getElementById("loginMessage");
+                    <button
+                        class="tab"
+                        id="signUpTab"
+                        type="button"
+                    >
+                        Sign Up
+                    </button>
 
-        const button =
-            this.querySelector(".main-button");
+                </div>
 
-        button.disabled = true;
-        message.className = "message";
-        message.textContent = "Logging in...";
 
-        const { error } =
-            await supabaseClient.auth.signInWithPassword({
-                email,
-                password
-            });
+                <div
+                    class="status"
+                    id="status"
+                    role="alert"
+                ></div>
 
-        button.disabled = false;
 
-        if (error) {
+                <!-- =====================================
+                     SIGN IN
+                ====================================== -->
 
-            message.className = "message error";
-            message.textContent = error.message;
+                <form
+                    class="form active"
+                    id="signInForm"
+                >
 
-            return;
+                    <h1 class="form-title">
+                        Welcome back
+                    </h1>
+
+
+                    <p class="form-description">
+                        Sign in to continue your EduScroll journey.
+                    </p>
+
+
+                    <div class="field">
+
+                        <label for="signInEmail">
+                            E-mail
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ✉
+                            </span>
+
+                            <input
+                                id="signInEmail"
+                                type="email"
+                                autocomplete="email"
+                                placeholder="you@example.com"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="signInPassword">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                id="signInPassword"
+                                type="password"
+                                autocomplete="current-password"
+                                placeholder="Your password"
+                                required
+                            >
+
+                            <button
+                                class="password-toggle"
+                                type="button"
+                                data-target="signInPassword"
+                            >
+                                ◉
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="forgot"
+                        id="forgotPassword"
+                        type="button"
+                    >
+                        Forgot password?
+                    </button>
+
+
+                    <button
+                        class="primary-button"
+                        id="signInButton"
+                        type="submit"
+                    >
+                        Sign In
+                    </button>
+
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+
+                    <button
+                        class="google-button"
+                        id="googleSignIn"
+                        type="button"
+                    >
+
+                        <span class="google-icon">
+                            G
+                        </span>
+
+                        Continue with Google
+
+                    </button>
+
+                </form>
+
+
+                <!-- =====================================
+                     SIGN UP
+                ====================================== -->
+
+                <form
+                    class="form"
+                    id="signUpForm"
+                >
+
+                    <h1 class="form-title">
+                        Create your account
+                    </h1>
+
+
+                    <p class="form-description">
+                        Join EduScroll and build your personalized learning world.
+                    </p>
+
+
+                    <div class="field">
+
+                        <label for="signUpUsername">
+                            Username
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                @
+                            </span>
+
+                            <input
+                                id="signUpUsername"
+                                type="text"
+                                autocomplete="username"
+                                placeholder="yourusername"
+                                minlength="3"
+                                maxlength="30"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="signUpEmail">
+                            E-mail
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ✉
+                            </span>
+
+                            <input
+                                id="signUpEmail"
+                                type="email"
+                                autocomplete="email"
+                                placeholder="you@example.com"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="signUpPassword">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                id="signUpPassword"
+                                type="password"
+                                autocomplete="new-password"
+                                placeholder="At least 6 characters"
+                                minlength="6"
+                                required
+                            >
+
+                            <button
+                                class="password-toggle"
+                                type="button"
+                                data-target="signUpPassword"
+                            >
+                                ◉
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="signUpConfirm">
+                            Confirm password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                id="signUpConfirm"
+                                type="password"
+                                autocomplete="new-password"
+                                placeholder="Repeat your password"
+                                minlength="6"
+                                required
+                            >
+
+                            <button
+                                class="password-toggle"
+                                type="button"
+                                data-target="signUpConfirm"
+                            >
+                                ◉
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="primary-button"
+                        id="signUpButton"
+                        type="submit"
+                    >
+                        Create Account
+                    </button>
+
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+
+                    <button
+                        class="google-button"
+                        id="googleSignUp"
+                        type="button"
+                    >
+
+                        <span class="google-icon">
+                            G
+                        </span>
+
+                        Continue with Google
+
+                    </button>
+
+                </form>
+
+
+                <p class="terms">
+
+                    By continuing, you agree to EduScroll's
+
+                    <a href="#">
+                        Terms
+                    </a>
+
+                    and
+
+                    <a href="#">
+                        Privacy Policy
+                    </a>.
+
+                </p>
+
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        /* ==================================================
+           EDUSCROLL
+           REAL SUPABASE AUTHENTICATION
+        ================================================== */
+
+
+        /* ==================================================
+           1. SUPABASE CONFIG
+        ================================================== */
+
+
+        /*
+         * !!! CHANGE THESE TWO VALUES !!!
+         *
+         * Supabase Dashboard
+         * → Project Settings
+         * → API
+         */
+
+
+        const SUPABASE_URL =
+            "https://hazdrvuxoqbqdxmdjhru.supabase.co/rest/v1/";
+
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_Sog2nQJ6lpK6rbq56IN5VA_bsocB0pj";
+
+
+        /*
+         * IMPORTANT:
+         *
+         * Never put:
+         *
+         * service_role
+         *
+         * secret key
+         *
+         * into this file.
+         */
+
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY,
+                {
+                    auth: {
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true
+                    }
+                }
+            );
+
+
+        /* ==================================================
+           2. ELEMENTS
+        ================================================== */
+
+        const signInTab =
+            document.getElementById("signInTab");
+
+        const signUpTab =
+            document.getElementById("signUpTab");
+
+        const signInForm =
+            document.getElementById("signInForm");
+
+        const signUpForm =
+            document.getElementById("signUpForm");
+
+        const statusBox =
+            document.getElementById("status");
+
+        const signInButton =
+            document.getElementById("signInButton");
+
+        const signUpButton =
+            document.getElementById("signUpButton");
+
+        const googleSignIn =
+            document.getElementById("googleSignIn");
+
+        const googleSignUp =
+            document.getElementById("googleSignUp");
+
+        const forgotPassword =
+            document.getElementById("forgotPassword");
+
+
+        /* ==================================================
+           3. STATUS
+        ================================================== */
+
+        function showStatus(
+            message,
+            type = "error"
+        ) {
+
+            statusBox.textContent =
+                message;
+
+            statusBox.className =
+                `status show ${type}`;
         }
 
-        message.className = "message success";
-        message.textContent = "Login successful.";
 
-        setTimeout(() => {
-            window.location.href = "language.html";
-        }, 500);
-    }
-);
+        function clearStatus() {
 
+            statusBox.textContent = "";
 
-/* SIGN UP */
-
-document.getElementById("signupForm").addEventListener(
-    "submit",
-    async function(e) {
-
-        e.preventDefault();
-
-        const email =
-            document.getElementById("signupEmail").value.trim();
-
-        const password =
-            document.getElementById("signupPassword").value;
-
-        const confirm =
-            document.getElementById("signupConfirm").value;
-
-        const message =
-            document.getElementById("signupMessage");
-
-        const button =
-            this.querySelector(".main-button");
-
-        if (password !== confirm) {
-
-            message.className = "message error";
-            message.textContent = "Passwords do not match.";
-
-            return;
+            statusBox.className =
+                "status";
         }
 
-        button.disabled = true;
-        message.className = "message";
-        message.textContent = "Creating your account...";
 
-        const { data, error } =
-            await supabaseClient.auth.signUp({
-                email,
-                password
-            });
+        /* ==================================================
+           4. LOADING
+        ================================================== */
 
-        button.disabled = false;
+        function setLoading(
+            button,
+            loading,
+            normalText
+        ) {
 
-        if (error) {
+            button.disabled =
+                loading;
 
-            message.className = "message error";
-            message.textContent = error.message;
-
-            return;
+            button.textContent =
+                loading
+                    ? "Please wait..."
+                    : normalText;
         }
 
-        if (data.session) {
 
-            message.className = "message success";
-            message.textContent = "Account created.";
+        /* ==================================================
+           5. TABS
+        ================================================== */
 
-            setTimeout(() => {
-                window.location.href = "language.html";
-            }, 500);
+        function showSignIn() {
 
-        } else {
+            signInTab.classList.add("active");
 
-            message.className = "message success";
-            message.textContent =
-                "Account created. Check your email to confirm your account.";
+            signUpTab.classList.remove("active");
+
+            signInForm.classList.add("active");
+
+            signUpForm.classList.remove("active");
+
+            clearStatus();
         }
-    }
-);
 
 
-/* SHOW PASSWORD */
+        function showSignUp() {
 
-function togglePassword(id, button) {
+            signUpTab.classList.add("active");
 
-    const input = document.getElementById(id);
+            signInTab.classList.remove("active");
 
-    if (input.type === "password") {
+            signUpForm.classList.add("active");
 
-        input.type = "text";
-        button.textContent = "Hide";
+            signInForm.classList.remove("active");
 
-    } else {
-
-        input.type = "password";
-        button.textContent = "Show";
-    }
-}
+            clearStatus();
+        }
 
 
-/* FORGOT PASSWORD */
-
-async function forgotPassword() {
-
-    const email =
-        document.getElementById("loginEmail").value.trim();
-
-    const message =
-        document.getElementById("loginMessage");
-
-    if (!email) {
-
-        message.className = "message error";
-        message.textContent = "Enter your email first.";
-
-        return;
-    }
-
-    message.className = "message";
-    message.textContent = "Sending reset email...";
-
-    const { error } =
-        await supabaseClient.auth.resetPasswordForEmail(
-            email,
-            {
-                redirectTo:
-                    window.location.origin +
-                    "/reset-password.html"
-            }
+        signInTab.addEventListener(
+            "click",
+            showSignIn
         );
 
-    if (error) {
 
-        message.className = "message error";
-        message.textContent = error.message;
+        signUpTab.addEventListener(
+            "click",
+            showSignUp
+        );
 
-        return;
-    }
 
-    message.className = "message success";
-    message.textContent =
-        "Password reset email sent. Check your inbox.";
-}
+        /* ==================================================
+           6. PASSWORD VISIBILITY
+        ================================================== */
 
-</script>
+        document
+            .querySelectorAll(".password-toggle")
+            .forEach(button => {
 
-</body>
-</html>
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        const target =
+                            document.getElementById(
+                                button.dataset.target
+                            );
+
+
+                        if (
+                            target.type ===
+                            "password"
+                        ) {
+
+                            target.type =
+                                "text";
+
+                        } else {
+
+                            target.type =
+                                "password";
+                        }
+
+                    }
+                );
+
+            });
+
+
+        /* ==================================================
+           7. LOAD USER PROFILE
+        ================================================== */
+
+        async function getUserProfile(userId) {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+
+                    .from("profiles")
+
+                    .select(`
+                        id,
+                        username,
+                        display_name,
+                        onboarding_completed,
+                        language,
+                        pomodoro_enabled
+                    `)
+
+                    .eq("id", userId)
+
+                    .maybeSingle();
+
+
+            if (error) {
+
+                console.error(
+                    "Profile error:",
+                    error
+                );
+
+                return {
+                    profile: null,
+                    error
+                };
+            }
+
+
+            return {
+                profile: data,
+                error: null
+            };
+        }
+
+
+        /* ==================================================
+           8. ROUTE USER
+        ================================================== */
+
+        async function routeUser(user) {
+
+            if (!user) {
+                return;
+            }
+
+
+            showStatus(
+                "Loading your EduScroll profile...",
+                "success"
+            );
+
+
+            const {
+                profile,
+                error
+            } =
+                await getUserProfile(
+                    user.id
+                );
+
+
+            if (error) {
+
+                showStatus(
+                    "We couldn't load your profile. Please try again."
+                );
+
+                return;
+            }
+
+
+            /*
+             * Normally the trigger creates the profile.
+             *
+             * This fallback protects us if the trigger
+             * hasn't created it yet.
+             */
+
+
+            if (!profile) {
+
+                const username =
+                    user.user_metadata
+                        ?.username ||
+                    `user_${user.id.slice(0, 8)}`;
+
+
+                const {
+                    error: insertError
+                } =
+                    await supabaseClient
+
+                        .from("profiles")
+
+                        .insert({
+                            id: user.id,
+
+                            username: username,
+
+                            display_name:
+                                user.user_metadata
+                                    ?.display_name ||
+                                username,
+
+                            avatar_url:
+                                user.user_metadata
+                                    ?.avatar_url ||
+                                null,
+
+                            onboarding_completed:
+                                false
+                        });
+
+
+                if (insertError) {
+
+                    console.error(
+                        insertError
+                    );
+
+                    showStatus(
+                        "Your account exists, but your profile could not be loaded."
+                    );
+
+                    return;
+                }
+
+
+                window.location.href =
+                    "main.html";
+
+                return;
+            }
+
+
+            /*
+             * THE IMPORTANT PART
+             *
+             * New user:
+             *
+             * onboarding_completed = false
+             *
+             *        ↓
+             *
+             * main.html
+             *
+             *
+             * Returning user:
+             *
+             * onboarding_completed = true
+             *
+             *        ↓
+             *
+             * home.html
+             */
+
+
+            if (
+                profile.onboarding_completed
+                === true
+            ) {
+
+                window.location.href =
+                    "home.html";
+
+            } else {
+
+                window.location.href =
+                    "main.html";
+            }
+
+        }
+
+
+        /* ==================================================
+           9. SIGN IN
+        ================================================== */
+
+        signInForm.addEventListener(
+            "submit",
+            async event => {
+
+                event.preventDefault();
+
+                clearStatus();
+
+
+                const email =
+                    document
+                        .getElementById(
+                            "signInEmail"
+                        )
+                        .value
+                        .trim();
+
+
+                const password =
+                    document
+                        .getElementById(
+                            "signInPassword"
+                        )
+                        .value;
+
+
+                if (
+                    !email ||
+                    !password
+                ) {
+
+                    showStatus(
+                        "Please enter your e-mail and password."
+                    );
+
+                    return;
+                }
+
+
+                setLoading(
+                    signInButton,
+                    true,
+                    "Sign In"
+                );
+
+
+                try {
+
+                    const {
+                        data,
+                        error
+                    } =
+                        await supabaseClient
+                            .auth
+                            .signInWithPassword({
+                                email,
+                                password
+                            });
+
+
+                    if (error) {
+
+                        console.error(error);
+
+                        showStatus(
+                            error.message
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        data &&
+                        data.user
+                    ) {
+
+                        await routeUser(
+                            data.user
+                        );
+                    }
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showStatus(
+                        "Something went wrong. Please try again."
+                    );
+
+                } finally {
+
+                    setLoading(
+                        signInButton,
+                        false,
+                        "Sign In"
+                    );
